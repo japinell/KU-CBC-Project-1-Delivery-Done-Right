@@ -2,30 +2,37 @@
 
 ## Task
 
-Build a weather dashboard that will run in the browser and use the [OpenWeather One Call API](https://openweathermap.org/api/one-call-api) to retrieve weather data for cities. The application will render data using HTML generated dynamically and will use `localStorage` to store persistent data.
+The user will be able to search and filter restaurants by certain features. Features will include the restaurants near the user, delivery/no delivery/No Contact delivery, nutrition & safety information. Future feature: extend the program to include grocery delivery information. The application will be using the following APIs:
+
+https://api.fda.gov/food
+https://www.nutritionix.com/business/api
+https://maps.googleapis.com/maps/api/place/findplacefromtext/
 
 ## User Story
 
 ```
-AS A traveler
-I WANT to see the weather outlook for multiple cities
-SO THAT I can plan a trip accordingly
+AS A local eater
+I WANT to find nearby restaurants that have delivery services along with nutrition information
 ```
 
 ## Acceptance Criteria
 
 ```
-GIVEN a weather dashboard with form inputs
-WHEN I search for a city
-THEN I am presented with current and future conditions for that city and that city is added to the search history
-WHEN I view current weather conditions for that city
-THEN I am presented with the city name, the date, an icon representation of weather conditions, the temperature, the humidity, the wind speed, and the UV index
-WHEN I view the UV index
-THEN I am presented with a color that indicates whether the conditions are favorable, moderate, or severe
-WHEN I view future weather conditions for that city
-THEN I am presented with a 5-day forecast that displays the date, an icon representation of weather conditions, the temperature, the wind speed, and the humidity
-WHEN I click on a city in the search history
-THEN I am again presented with current and future conditions for that city
+AS A local eater
+I WANT to find nearby restaurants that have delivery services along with nutrition information
+SO THAT I can choose based on my preferences
+WHEN I open the web application
+THEN i am provided a list of Food Genre (types) as well as a search input form
+WHEN the user starts his/her input search
+THEN the user can enter text corresponding to the food that they want by zip code or mile radius
+WHEN I enter the input parameters and click the search button
+THEN I am presented with information of restaurants with my search criteria
+WHEN I click on a location listed
+THEN I can view if they have delivery, a different form of delivery(such as no-contact), or no delivery
+WHEN I click the key word of food items
+THEN I am presented with nutritional information of that keyword
+WHEN I search a different keyword
+THEN I store the previous information into LocalStorage to access again
 ```
 
 ## Mock-Up
