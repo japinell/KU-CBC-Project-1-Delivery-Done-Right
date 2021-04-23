@@ -27,12 +27,16 @@ function processSearch(event) {
   //
 
   var userInput = {
-    search: searchText,
-    description2: description,
+    type: searchText,
+    foodDescription: description,
+    zipCodeInput: zipCode,
+    radiusInput: radius,
   };
-
+  console.log(userInput);
   searchText = $("#searchText").val("");
   description = $("#description").val("");
+  zipCode = $("#zipcode").val("");
+  radius = $("#radius").val("");
   //
 }
 
