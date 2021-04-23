@@ -13,6 +13,7 @@ The user will be able to search and filter restaurants by certain features. Feat
 ```
 AS A local eater
 I WANT to find nearby restaurants that have delivery services along with nutrition information
+SO THAT I can choose based on my preferences
 ```
 
 ## Acceptance Criteria

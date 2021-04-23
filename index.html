@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css"
+    />
+    <link rel="stylesheet" href="./Assets/css/reset.css" />
+    <link rel="stylesheet" href="./Assets/css/css.css" />
+    <title>Delivery Done Right</title>
+  </head>
+
+  <body>
+    <header class="container-fluid bg-light text-dark mb-5 p-3">
+      <div class="d-flex justify-content-center">
+        <h1 class="text-align-center">Delivery Done Right</h1>
+      </div>
+    </header>
+    <section class="col-12 row my-4">
+      <div class="col-2 text-light">
+        <h2>Search for a Food:</h2>
+        <div class="col-12 form-group" id="inputDiv">
+          <input
+            class="form-control"
+            list="datalistOptions"
+            id="searchText"
+            placeholder="Food Type Selected..."
+          />
+          <br />
+          <p>I.e. "American" or "Italian"</p>
+          <input
+            class="form-control"
+            type="text"
+            id="description"
+            placeholder="Food Description..."
+          />
+          <br />
+          <p>I.e. "Burgers" or "Tacos"</p>
+          <input
+            class="form-control"
+            type="number"
+            id="zipcode"
+            placeholder="Zip Code..."
+          />
+          <br />
+          <input
+            class="form-control"
+            type="number"
+            id="radius"
+            placeholder="Mile Radius..."
+          />
+          <br />
+          <datalist id="datalistOptions">
+            <option value="American"></option>
+            <option value="Mexican"></option>
+            <option value="Chinese"></option>
+            <option value="Italian"></option>
+            <option value="BBQ"></option>
+          </datalist>
+          <button class="btn btn-block btn-danger" id="searchButton">
+            Search
+          </button>
+        </div>
+        <hr />
+        <h2>Search History:</h2>
+        <div id="Results" class="container">
+          <!-- Item Results go here -->
+        </div>
+      </div>
+      <div class="col-8 mb-5">
+        <div class="card" id="topDiv">
+          <h3 class="card-header bg-info">Restaurant Map</h3>
+          <div class="container-fluid card-body">
+            <p class="card-text">Text</p>
+          </div>
+        </div>
+        <br />
+        <div class="card" id="bottomDiv">
+          <h3 class="card-header bg-info">Restaurants Listed:</h3>
+          <div class="container-fluid card-body">
+            <div id="information" class="card-text">
+              <p class="card-text">Text</p>
+              <!-- Restaurant Information -->
+            </div>
+          </div>
+        </div>
+      </div>
+      <hr />
+    </section>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://unpkg.com/dayjs@1.10.4/dayjs.min.js"></script>
+    <script src="https://unpkg.com/dayjs@1.10.4/plugin/advancedFormat.js"></script>
+    <script src="https://unpkg.com/dayjs@1.10.4/plugin/weekOfYear.js"></script>
+    <script src="./Assets/js/javascript.js"></script>
+    <script>
+      dayjs.extend(window.dayjs_plugin_advancedFormat);
+      dayjs.extend(window.dayjs_plugin_weekOfYear);
+    </script>
+  </body>
+</html>
+<!-- Test -->
