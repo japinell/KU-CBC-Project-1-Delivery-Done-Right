@@ -59,3 +59,5 @@ function addSearchHistory(searchCity) {
   }
   //
 }
+
+// Test comment from Rigo
