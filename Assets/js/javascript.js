@@ -64,3 +64,4 @@ function addSearchHistory(searchCity) {
 // Test Comment
 // Test Comment 2
 // Test Comment by Joel
+// Another comment by Rigo
