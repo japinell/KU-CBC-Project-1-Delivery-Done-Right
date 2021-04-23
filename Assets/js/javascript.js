@@ -1,10 +1,7 @@
-<<<<<<< HEAD
-=======
 // Constants
 // Another comment here
 const NUT_API_SERVER = "https://api.nutritionix.com";
 const NUT_API_END_POINT = "/v1-1/search";
->>>>>>> a1aadc1ac082bca8f80c1110a0d12d0b78640f03
 const NUT_API_KEY = "dcb0f2394e224dd571c331c9f7960d2a";
 const NUT_API_ID = "3a3f663b";
 // Elements
@@ -64,3 +61,4 @@ function addSearchHistory(searchCity) {
 }
 
 // Test Comment
+// Test Comment 2
