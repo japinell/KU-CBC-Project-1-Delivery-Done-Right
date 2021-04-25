@@ -8,6 +8,7 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css"
     />
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
     <link rel="stylesheet" href="./Assets/css/reset.css" />
     <link rel="stylesheet" href="./Assets/css/css.css" />
     <title>Delivery Done Right</title>
@@ -71,7 +72,7 @@
         </div>
       </div>
       <div class="col-8 mb-5">
-        <div class="card" id="topDiv">
+        <div class="card" id="map">
           <h3 class="card-header bg-info text-white">Restaurant Map</h3>
           <div class="container-fluid card-body">
             <p class="card-text">Text</p>
@@ -126,9 +127,16 @@
       <hr />
     </section>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://unpkg.com/dayjs@1.10.4/dayjs.min.js"></script>
     <script src="https://unpkg.com/dayjs@1.10.4/plugin/advancedFormat.js"></script>
     <script src="https://unpkg.com/dayjs@1.10.4/plugin/weekOfYear.js"></script>
+    <script
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDDaGlFyaTlqi8gx413HZsEpGZWnzjIbQk&callback=initMap&libraries=places&v=weekly"
+      async
+    ></script>
+    <script src="./Assets/js/nutritionix.js" defer></script>
+    <script src="./Assets/js/config.js" defer></script>
     <script src="./Assets/js/delivery.js"></script>
     <script>
       dayjs.extend(window.dayjs_plugin_advancedFormat);
