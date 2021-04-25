@@ -1,16 +1,3 @@
-// Foursquare API
-const FOURSQUARE_API_SERVER = "https://api.foursquare.com";
-const FOURSQUARE_SEARCH_API = "/v2/venues/search";
-const FOURSQUARE_CLIENT_ID = "VT3I5R4QZ1YUEHNVHGUKIW1ARP1GWIRBCR4WIJ1JF2TBEY3O";
-const FOURSQUARE_CLIENT_SECRET =
-  "5P0PFJJHDH2SMT3HFOQ2EKZXODJPBNQCQTSA4MYV1PM5UW34";
-
-// Yelp API
-const YELP_API_SERVER = "https://api.yelp.com";
-const YELP_SEARCH_API = "/v3/businesses/search";
-const YELP_API_KEY =
-  "8jWJ9apB_OyS-ZUbLamBcg-z73aohgWKVXJD9YO1dk_k4zUomzLlhg5ys8WsinIBcNvUq_bv2IE6sciYZN1EyIQmeuSMDGWOFFvEuna481l4r4gQT7Y3pL3Q9k2EYHYx";
-
 // Elements
 const restaurantList = $("#restaurantList");
 const restaurantSelection = $("#restaurantSelection");
@@ -51,10 +38,13 @@ function getFoodInformation() {
 // Get delivery information
 function getDeliveryInformation() {
   //
-  var apiURL = FOURSQUARE_API_SERVER + FOURSQUARE_SEARCH_API;
+  var apiURL =
+    $("body").data("FOURSQUARE_API_SERVER") +
+    $("body").data("FOURSQUARE_SEARCH_API");
   apiURL = apiURL + "?near=Overland Park,KS&query=Wendys&v=20210424";
-  apiURL = apiURL + "&client_id=" + FOURSQUARE_CLIENT_ID;
-  apiURL = apiURL + "&client_secret=" + FOURSQUARE_CLIENT_SECRET;
+  apiURL = apiURL + "&client_id=" + $("body").data("FOURSQUARE_CLIENT_ID");
+  apiURL =
+    apiURL + "&client_secret=" + $("body").data("FOURSQUARE_CLIENT_SECRET");
   //
   fetch(apiURL)
     //
