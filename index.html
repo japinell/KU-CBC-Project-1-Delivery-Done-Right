@@ -72,7 +72,7 @@
       </div>
       <div class="col-8 mb-5">
         <div class="card" id="topDiv">
-          <h3 class="card-header bg-info">Restaurant Map</h3>
+          <h3 class="card-header bg-info text-white">Restaurant Map</h3>
           <div class="container-fluid card-body">
             <p class="card-text">Text</p>
           </div>
@@ -80,25 +80,44 @@
         <br />
         <!-- Restaurant list -->
         <div class="card">
-          <h3 class="card-header bg-info">Restaurants Available</h3>
-          <div class="container-fluid card-body">
-            <div id="information" class="card-text">
-              <div class="table-responsive" id="restaurantList"></div>
+          <h3 class="card-header bg-info text-white">Restaurants Available</h3>
+          <div class="container-fluid card card-body">
+            <div class="table-responsive-md" id="restaurantList">
               <!-- Restaurant Information -->
             </div>
           </div>
         </div>
         <!-- End of restaurant list -->
         <br />
-        <!-- Restaurant selection -->
+        <!-- Restaurant information -->
         <div class="card" id="restaurantSelection">
-          <h3 class="card-header bg-info">Restaurant Information</h3>
+          <h3 class="card-header bg-info text-white">Restaurant Information</h3>
           <div class="container-fluid card-body">
             <div id="information" class="card-text">
-              <p class="card-text">Food Information</p>
-              <p class="card-text">Delivery Information</p>
-              <p class="card-text">Delivery (Y,N):</p>
-              <p class="card-text">No Contact (Y,N):</p>
+              <p class="card-text">
+                Name:<span class="mx-3" id="venueName"></span>
+              </p>
+              <p class="card-text">
+                Category:<span class="mx-3" id="cityVenueCategoryName"></span>
+              </p>
+              <p class="card-text badge bg-info text-white p-2">
+                Delivery Information
+              </p>
+              <p class="card-text">
+                Address:<span class="mx-3" id="venueAddress"></span>
+              </p>
+              <p class="card-text">
+                Phone Number:<span class="mx-3" id="venuePhoneNumber"></span>
+              </p>
+              <p class="card-text">
+                Delivery (Y,N):<span class="mx-3" id="venueDeliveryYN"></span>
+              </p>
+              <p class="card-text">
+                No Contact (Y,N):<span
+                  class="mx-3"
+                  id="venueDeliveryNoContact"
+                ></span>
+              </p>
             </div>
           </div>
         </div>

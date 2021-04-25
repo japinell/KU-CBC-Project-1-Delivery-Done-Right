@@ -160,14 +160,15 @@ function renderDeliveryInformation() {
     tableBodyEl,
     tableRowEl,
     tableColEl,
-    tableCaptionEl;
+    tableCaptionEl,
+    tableButtonEl;
   //
   tableEl = $("<table>");
-  tableEl.addClass("table");
+  tableEl.addClass("table table-hover");
   //
-  tableCaptionEl = $("<caption>");
-  tableCaptionEl.text("List of restaurants");
-  tableCaptionEl.appendTo(tableEl);
+  // tableCaptionEl = $("<caption>");
+  // tableCaptionEl.text("List of restaurants");
+  // tableCaptionEl.appendTo(tableEl);
   //
   tableHeaderEl = $("<thead>");
   tableRowEl = $("<tr>");
@@ -215,27 +216,52 @@ function renderDeliveryInformation() {
   //
   for (var i = 0, l = cityObj.cityVenues.length; i < l; i++) {
     //
-    console.log(cityObj.cityVenues[i]);
     tableRowEl = $("<tr>");
     //
     tableColEl = $("<td>");
     tableColEl.attr("scope", "row");
+    tableColEl.addClass("py-4");
     tableColEl.text(i + 1);
     tableColEl.appendTo(tableRowEl);
     //
     tableColEl = $("<td>");
+    tableColEl.addClass("py-4");
     tableColEl.text(cityObj.cityVenues[i].venueName);
     tableColEl.appendTo(tableRowEl);
     //
     tableColEl = $("<td>");
+    tableColEl.addClass("py-4");
     tableColEl.text(cityObj.cityVenueCategoryName);
     tableColEl.appendTo(tableRowEl);
     //
     tableColEl = $("<td>");
-    tableColEl.text(cityObj.cityVenues[i].venueAddress);
+    //
+    tableButtonEl = $("<button>");
+    tableButtonEl.attr("name", cityObj.cityVenues[i].venueName);
+    tableButtonEl.attr("category", cityObj.cityVenueCategoryName);
+    //
+    if (cityObj.cityVenues[i].venueDeliveryProviderName != "") {
+      //
+      tableButtonEl.attr("delivery", "Y");
+      tableButtonEl.attr("contact", " ");
+      //
+    } else {
+      //
+      tableButtonEl.attr("delivery", "N");
+      tableButtonEl.attr("contact", "N");
+      //
+    }
+    //
+    tableButtonEl.attr("address", cityObj.cityVenues[i].venueAddress);
+    //
+    tableButtonEl.addClass("btn btn-link text-info");
+    tableButtonEl.text(cityObj.cityVenues[i].venueAddress);
+    tableButtonEl.appendTo(tableColEl);
+    //
     tableColEl.appendTo(tableRowEl);
     //
     tableColEl = $("<td>");
+    tableColEl.addClass("py-4");
     tableColEl.text(cityObj.cityVenues[i].venueCity);
     tableColEl.appendTo(tableRowEl);
     //
@@ -248,6 +274,28 @@ function renderDeliveryInformation() {
   tableEl.appendTo(restaurantList);
   //
 }
+
+// Render restaurant information
+function renderRestaurantInformation() {
+  //
+  $("#venueName").text($(this).attr("name"));
+  $("#cityVenueCategoryName").text($(this).attr("category"));
+  $("#venueAddress").text($(this).attr("address"));
+  $("#venueDeliveryYN").text($(this).attr("delivery"));
+  $("#venueDeliveryNoContact").text($(this).attr("contact"));
+  //
+}
+
+// Get city venue by selection
+function getCityVenueBySelection() {
+  //
+  console.log($(this));
+  //
+}
+
+// Event listeners
+// restaurantList.on("click", "button", getCityVenueBySelection);
+restaurantList.on("click", "button", renderRestaurantInformation);
 
 // Rock & Roll
 //getFoodInformation();
