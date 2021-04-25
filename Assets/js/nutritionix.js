@@ -16,6 +16,11 @@ const credentials = {
 
 var Url = "https://trackapi.nutritionix.com/v2/locations";
 var center = {};
+var searchTextInput = $("#searchText").val().trim();
+var descriptionInput = $("#description").val().trim();
+
+var zipCodeInput = $("#zipcode").val().trim();
+var radiusInput = $("#radius").val().trim();
 
 var map;
 var service;
@@ -53,6 +58,7 @@ function renderMap(coordinates) {
     fields: [
       "name",
       "business_status",
+      "icon",
       "types",
       "rating",
       "reviews",
@@ -64,6 +70,8 @@ function renderMap(coordinates) {
       "website",
       "url",
       "address_components",
+      "price_level",
+      "reviews",
     ],
   };
   service = new google.maps.places.PlacesService(map);
@@ -90,7 +98,7 @@ function createMarker(place) {
 }
 
 // Event Listener
-searchButton.on("click", getApi);
+searchButton.on("click", renderMap);
 
 // need to create a div with the
 // location logo-location name-location distance-location address
@@ -140,4 +148,6 @@ searchButton.on("click", getApi);
 //     });
 //     console.log(response);
 //   });
+
+// Test comment
 // }
