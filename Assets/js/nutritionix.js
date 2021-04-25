@@ -103,49 +103,49 @@ searchButton.on("click", renderMap);
 // need to create a div with the
 // location logo-location name-location distance-location address
 // Get API Function
-function getApi() {
-  //
-  var searchText = $("#searchText").val().trim();
-  var description = $("#description").val().trim();
+// function getApi() {
+//   //
+//   var searchText = $("#searchText").val().trim();
+//   var description = $("#description").val().trim();
 
-  var zipCode = $("#zipcode").val().trim();
-  var radius = $("#radius").val().trim();
-  //
+//   var zipCode = $("#zipcode").val().trim();
+//   var radius = $("#radius").val().trim();
+//   //
 
-  var userInput = {
-    type: searchText,
-    foodDescription: description,
-    zipCodeInput: zipCode,
-    radiusInput: radius,
-  };
+//   var userInput = {
+//     type: searchText,
+//     foodDescription: description,
+//     zipCodeInput: zipCode,
+//     radiusInput: radius,
+//   };
 
-  //
-  if (userInput.radiusInput === "") {
-    alert("You have not inputted a mile radius!");
-    window.location.reload();
-  }
-  console.log(userInput);
-  //
-  searchText = $("#searchText").val("");
-  description = $("#description").val("");
-  zipCode = $("#zipcode").val("");
-  radius = $("#radius").val("");
+//   //
+//   if (userInput.radiusInput === "") {
+//     alert("You have not inputted a mile radius!");
+//     window.location.reload();
+//   }
+//   console.log(userInput);
+//   //
+//   searchText = $("#searchText").val("");
+//   description = $("#description").val("");
+//   zipCode = $("#zipcode").val("");
+//   radius = $("#radius").val("");
 
-  //
-  $.ajax({
-    url: Url,
-    headers: credentials,
-    method: "GET",
-    contentType: "application/json",
-    data: {
-      ll: centerObj.lat + "," + centerObj.lng,
-      distance: userInput.radiusInput + "mi",
-      limit: 20,
-    },
-  }).then(function (response) {
-    var brand_ids = response.locations.map(function (location) {
-      return location.brand_ids;
-    });
-    console.log(response);
-  });
-}
+//   //
+//   $.ajax({
+//     url: Url,
+//     headers: credentials,
+//     method: "GET",
+//     contentType: "application/json",
+//     data: {
+//       ll: centerObj.lat + "," + centerObj.lng,
+//       distance: userInput.radiusInput + "mi",
+//       limit: 20,
+//     },
+//   }).then(function (response) {
+//     var brand_ids = response.locations.map(function (location) {
+//       return location.brand_ids;
+//     });
+//     console.log(response);
+//   });
+// }
