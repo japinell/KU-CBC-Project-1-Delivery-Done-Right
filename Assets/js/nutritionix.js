@@ -26,25 +26,27 @@ var map;
 var service;
 var infowindow;
 
+var coordinates = {
+  lat: 0.0,
+  long: 0.0,
+};
+
+//
 function initMap() {
-  let coordinates = {
-    lat: 0.0,
-    long: 0.0,
-  };
   if (navigator.geolocation) {
     //If we can get the location...we change the coordinates WHERE YOU ACTUALLY ARE
     navigator.geolocation.getCurrentPosition(function (position) {
       coordinates.lat = position.coords.latitude;
       coordinates.long = position.coords.longitude;
-      renderMap(coordinates);
+      renderMap();
     });
   } else {
     //DEFAULT LOCATION
-    renderMap(coordinates);
+    renderMap();
   }
 }
 
-function renderMap(coordinates) {
+function renderMap() {
   const city = new google.maps.LatLng(coordinates.lat, coordinates.long);
   map = new google.maps.Map(document.getElementById("map"), {
     center: city,
