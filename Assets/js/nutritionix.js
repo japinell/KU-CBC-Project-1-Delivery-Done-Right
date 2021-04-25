@@ -16,6 +16,11 @@ const credentials = {
 
 var Url = "https://trackapi.nutritionix.com/v2/locations";
 var center = {};
+var searchTextInput = $("#searchText").val().trim();
+var descriptionInput = $("#description").val().trim();
+
+var zipCodeInput = $("#zipcode").val().trim();
+var radiusInput = $("#radius").val().trim();
 
 var map;
 var service;
@@ -53,6 +58,7 @@ function renderMap(coordinates) {
     fields: [
       "name",
       "business_status",
+      "icon",
       "types",
       "rating",
       "reviews",
@@ -64,6 +70,8 @@ function renderMap(coordinates) {
       "website",
       "url",
       "address_components",
+      "price_level",
+      "reviews",
     ],
   };
   service = new google.maps.places.PlacesService(map);
@@ -90,54 +98,54 @@ function createMarker(place) {
 }
 
 // Event Listener
-searchButton.on("click", getApi);
+searchButton.on("click", renderMap);
 
 // need to create a div with the
 // location logo-location name-location distance-location address
 // Get API Function
-// function getApi() {
-//   //
-//   var searchText = $("#searchText").val().trim();
-//   var description = $("#description").val().trim();
+function getApi() {
+  //
+  var searchText = $("#searchText").val().trim();
+  var description = $("#description").val().trim();
 
-//   var zipCode = $("#zipcode").val().trim();
-//   var radius = $("#radius").val().trim();
-//   //
+  var zipCode = $("#zipcode").val().trim();
+  var radius = $("#radius").val().trim();
+  //
 
-//   var userInput = {
-//     type: searchText,
-//     foodDescription: description,
-//     zipCodeInput: zipCode,
-//     radiusInput: radius,
-//   };
+  var userInput = {
+    type: searchText,
+    foodDescription: description,
+    zipCodeInput: zipCode,
+    radiusInput: radius,
+  };
 
-//   //
-//   if (userInput.radiusInput === "") {
-//     alert("You have not inputted a mile radius!");
-//     window.location.reload();
-//   }
-//   console.log(userInput);
-//   //
-//   searchText = $("#searchText").val("");
-//   description = $("#description").val("");
-//   zipCode = $("#zipcode").val("");
-//   radius = $("#radius").val("");
+  //
+  if (userInput.radiusInput === "") {
+    alert("You have not inputted a mile radius!");
+    window.location.reload();
+  }
+  console.log(userInput);
+  //
+  searchText = $("#searchText").val("");
+  description = $("#description").val("");
+  zipCode = $("#zipcode").val("");
+  radius = $("#radius").val("");
 
-//   //
-//   $.ajax({
-//     url: Url,
-//     headers: credentials,
-//     method: "GET",
-//     contentType: "application/json",
-//     data: {
-//       ll: centerObj.lat + "," + centerObj.lng,
-//       distance: userInput.radiusInput + "mi",
-//       limit: 20,
-//     },
-//   }).then(function (response) {
-//     var brand_ids = response.locations.map(function (location) {
-//       return location.brand_ids;
-//     });
-//     console.log(response);
-//   });
-// }
+  //
+  $.ajax({
+    url: Url,
+    headers: credentials,
+    method: "GET",
+    contentType: "application/json",
+    data: {
+      ll: centerObj.lat + "," + centerObj.lng,
+      distance: userInput.radiusInput + "mi",
+      limit: 20,
+    },
+  }).then(function (response) {
+    var brand_ids = response.locations.map(function (location) {
+      return location.brand_ids;
+    });
+    console.log(response);
+  });
+}
