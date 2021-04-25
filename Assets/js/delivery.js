@@ -215,6 +215,7 @@ function renderDeliveryInformation() {
   //
   for (var i = 0, l = cityObj.cityVenues.length; i < l; i++) {
     //
+    console.log(cityObj.cityVenues[i]);
     tableRowEl = $("<tr>");
     //
     tableColEl = $("<td>");
@@ -227,7 +228,7 @@ function renderDeliveryInformation() {
     tableColEl.appendTo(tableRowEl);
     //
     tableColEl = $("<td>");
-    tableColEl.text(cityObj.cityVenues[i].cityVenueCategoryName);
+    tableColEl.text(cityObj.cityVenueCategoryName);
     tableColEl.appendTo(tableRowEl);
     //
     tableColEl = $("<td>");
