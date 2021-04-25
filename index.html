@@ -78,8 +78,9 @@
           </div>
         </div>
         <br />
-        <div class="card" id="bottomDiv">
-          <h3 class="card-header bg-info">Restaurants Listed:</h3>
+        <!-- Restaurant list -->
+        <div class="card" id="restaurantList">
+          <h3 class="card-header bg-info">Restaurants Listed</h3>
           <div class="container-fluid card-body">
             <div id="information" class="card-text">
               <p class="card-text">Text</p>
@@ -87,6 +88,21 @@
             </div>
           </div>
         </div>
+        <!-- End of restaurant list -->
+        <br />
+        <!-- Restaurant selection -->
+        <div class="card" id="restaurantSelection">
+          <h3 class="card-header bg-info">Restaurant Selection</h3>
+          <div class="container-fluid card-body">
+            <div id="information" class="card-text">
+              <p class="card-text">Food Information</p>
+              <p class="card-text">Delivery Information</p>
+              <p class="card-text">Delivery (Y,N):</p>
+              <p class="card-text">No Contact (Y,N):</p>
+            </div>
+          </div>
+        </div>
+        <!-- End of restaurant selection -->
       </div>
       <hr />
     </section>
@@ -94,7 +110,7 @@
     <script src="https://unpkg.com/dayjs@1.10.4/dayjs.min.js"></script>
     <script src="https://unpkg.com/dayjs@1.10.4/plugin/advancedFormat.js"></script>
     <script src="https://unpkg.com/dayjs@1.10.4/plugin/weekOfYear.js"></script>
-    <script src="./Assets/js/javascript.js"></script>
+    <script src="./Assets/js/delivery.js"></script>
     <script>
       dayjs.extend(window.dayjs_plugin_advancedFormat);
       dayjs.extend(window.dayjs_plugin_weekOfYear);
