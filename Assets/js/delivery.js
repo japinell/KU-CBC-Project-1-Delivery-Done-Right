@@ -13,6 +13,7 @@ const YELP_API_KEY =
 
 // Elements
 const restaurantList = $("#restaurantList");
+const restaurantSelection = $("#restaurantSelection");
 
 // Variables
 var cityObj = {
@@ -35,8 +36,6 @@ var venuesObj = {
   venueDeliveryId: "",
   venueDeliveryProviderName: "",
 };
-
-var cityVenues = [];
 
 // Show message
 function showMessage(message) {
@@ -139,7 +138,9 @@ function getDeliveryInformation() {
         cityObj.cityVenues.push(venuesObj);
         //
       }
-      console.log(cityObj);
+      //
+      renderDeliveryInformation();
+      //
     })
     .catch(function (error) {
       //
@@ -148,6 +149,102 @@ function getDeliveryInformation() {
       showMessage(`Error: ${error}`);
       //
     });
+  //
+}
+
+// Render delivery information
+function renderDeliveryInformation() {
+  //
+  var tableEl,
+    tableHeaderEl,
+    tableBodyEl,
+    tableRowEl,
+    tableColEl,
+    tableCaptionEl;
+  //
+  tableEl = $("<table>");
+  tableEl.addClass("table");
+  //
+  tableCaptionEl = $("<caption>");
+  tableCaptionEl.text("List of restaurants");
+  tableCaptionEl.appendTo(tableEl);
+  //
+  tableHeaderEl = $("<thead>");
+  tableRowEl = $("<tr>");
+  //
+  // #
+  //
+  tableColEl = $("<th>");
+  tableColEl.attr("scope", "col");
+  tableColEl.text("#");
+  tableColEl.appendTo(tableRowEl);
+  //
+  // Restaurant name
+  //
+  tableColEl = $("<th>");
+  tableColEl.attr("scope", "col");
+  tableColEl.text("Restaurant Name");
+  tableColEl.appendTo(tableRowEl);
+  //
+  // Category
+  //
+  tableColEl = $("<th>");
+  tableColEl.attr("scope", "col");
+  tableColEl.text("Category");
+  tableColEl.appendTo(tableRowEl);
+  //
+  // Address
+  //
+  tableColEl = $("<th>");
+  tableColEl.attr("scope", "col");
+  tableColEl.text("Address");
+  tableColEl.appendTo(tableRowEl);
+  //
+  // City
+  //
+  tableColEl = $("<th>");
+  tableColEl.attr("scope", "col");
+  tableColEl.text("City");
+  tableColEl.appendTo(tableRowEl);
+  //
+  tableRowEl.appendTo(tableHeaderEl);
+  //
+  tableHeaderEl.appendTo(tableEl);
+  //
+  tableBodyEl = $("<tbody>");
+  //
+  for (var i = 0, l = cityObj.cityVenues.length; i < l; i++) {
+    //
+    tableRowEl = $("<tr>");
+    //
+    tableColEl = $("<td>");
+    tableColEl.attr("scope", "row");
+    tableColEl.text(i + 1);
+    tableColEl.appendTo(tableRowEl);
+    //
+    tableColEl = $("<td>");
+    tableColEl.text(cityObj.cityVenues[i].venueName);
+    tableColEl.appendTo(tableRowEl);
+    //
+    tableColEl = $("<td>");
+    tableColEl.text(cityObj.cityVenues[i].cityVenueCategoryName);
+    tableColEl.appendTo(tableRowEl);
+    //
+    tableColEl = $("<td>");
+    tableColEl.text(cityObj.cityVenues[i].venueAddress);
+    tableColEl.appendTo(tableRowEl);
+    //
+    tableColEl = $("<td>");
+    tableColEl.text(cityObj.cityVenues[i].venueCity);
+    tableColEl.appendTo(tableRowEl);
+    //
+    tableRowEl.appendTo(tableBodyEl);
+    //
+  }
+  //
+  tableBodyEl.appendTo(tableEl);
+  //
+  tableEl.appendTo(restaurantList);
   //
 }
 
