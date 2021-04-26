@@ -46,7 +46,7 @@ const restaurantSelection = $("#restaurantSelection");
 //
 var Url = "https://trackapi.nutritionix.com/v2/locations";
 var center = {};
-var searchTextInput = $("#searchText").val().trim();
+
 var queryInput = $("#description").val().trim();
 
 var zipCodeInput = $("#zipcode").val().trim();
@@ -159,7 +159,7 @@ function renderMap() {
   //
   var rad, zip, qry;
   //
-  searchTextInput = $("#searchText").val().trim();
+
   zipCodeInput = $("#zipcode").val().trim();
   radiusInput = $("#radius").val().trim();
   queryInput = $("#description").val().trim();
@@ -182,12 +182,12 @@ function renderMap() {
     //
   }
   //
-  type = searchTextInput === "" ? "" : searchTextInput;
+
   rad = radiusInput === "" ? 5000 : radiusInput;
   qry = queryInput === "" ? "" : queryInput;
   //
   search.radius = rad;
-  search.foodType = type;
+
   search.query = qry;
   //
   getDeliveryInformation(search.cityName, search.radius, search.query);
@@ -200,7 +200,7 @@ function renderMap() {
   var request = {
     location: city,
     radius: rad, // meters
-    type: ["restaurant", "food"],
+    keyword: search.query,
     // name: "Wendy's",
     openNow: true,
     fields: [
@@ -236,6 +236,8 @@ function callback(results, status) {
     for (var i = 0; i < results.length; i++) {
       //
       createMarker(results[i]);
+      console.log(results[i]);
+
       //
     }
     //
@@ -248,8 +250,9 @@ function createMarker(place) {
   //
   if (!place.geometry || !place.geometry.location) return;
   const marker = new google.maps.Marker({
-    map,
+    map: map,
     position: place.geometry.location,
+    title: place.name,
   });
   //
   google.maps.event.addListener(marker, "click", () => {
