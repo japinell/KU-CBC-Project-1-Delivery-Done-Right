@@ -1,3 +1,5 @@
+import * as utils from "./utils.js";
+
 // Elements
 const restaurantList = $("#restaurantList");
 const restaurantSelection = $("#restaurantSelection");
@@ -290,7 +292,8 @@ restaurantList.on("click", "button", renderRestaurantInformation);
 // Rock & Roll
 //getFoodInformation();
 getDeliveryInformation();
-
+// var p = utils.getLocationByPostalCode("53147");
+// console.log(p);
 //
 // Get delivery information
 function YELPgetDeliveryInformation(headers) {
