@@ -90,6 +90,7 @@ var venuesObj = {
   venueCountry: "",
   venueDeliveryId: "",
   venueDeliveryProviderName: "",
+  venueIcon: "",
 };
 
 // Show message
@@ -237,8 +238,7 @@ function callback(results, status) {
     for (var i = 0; i < results.length; i++) {
       //
       createMarker(results[i]);
-      console.log(results[i]);
-
+      //console.log(results[i]);
       //
     }
     //
@@ -277,7 +277,9 @@ function getDeliveryInformation(city, radius, query) {
   var apiURL = FOURSQUARE_API_SERVER + FOURSQUARE_SEARCH_API;
   apiURL = apiURL + "?near=" + city;
   apiURL = apiURL + "&radius=" + radius;
-  apiURL = apiURL + "&query=" + query + "&v=20210424";
+  // apiURL = apiURL + "&categoryId=4d4b7105d754a06374d81259";
+  apiURL = apiURL + "&query=" + query;
+  apiURL = apiURL + "&v=20210424";
   apiURL = apiURL + "&client_id=" + FOURSQUARE_CLIENT_ID;
   apiURL = apiURL + "&client_secret=" + FOURSQUARE_CLIENT_SECRET;
   //
@@ -336,6 +338,7 @@ function getDeliveryInformation(city, radius, query) {
           venueCountry: "",
           venueDeliveryId: "",
           venueDeliveryProviderName: "",
+          venueIcon: "",
         };
         //
         venuesObj.venueName = data.response.venues[i].name;
@@ -357,6 +360,23 @@ function getDeliveryInformation(city, radius, query) {
           //
           venuesObj.venueDeliveryId = "";
           venuesObj.venueDeliveryProviderName = "";
+          //
+        }
+        //
+        if (
+          data.response.venues[i].hasOwnProperty("categories") &&
+          data.response.venues[i].categories.length > 0 &&
+          data.response.venues[i].categories[0].hasOwnProperty("icon")
+        ) {
+          //
+          venuesObj.venueIcon =
+            data.response.venues[i].categories[0].icon.prefix +
+            "bg_32" +
+            data.response.venues[i].categories[0].icon.suffix;
+          //
+        } else {
+          //
+          venuesObj.venueIcon = "";
           //
         }
         //
@@ -386,7 +406,8 @@ function renderDeliveryInformation() {
     tableRowEl,
     tableColEl,
     tableCaptionEl,
-    tableButtonEl;
+    tableButtonEl,
+    tableImgEl;
   //
   restaurantList.empty();
   //
@@ -404,20 +425,31 @@ function renderDeliveryInformation() {
   //
   tableColEl = $("<th>");
   tableColEl.attr("scope", "col");
+  // tableColEl.addClass("col-1");
   tableColEl.text("#");
   tableColEl.appendTo(tableRowEl);
   //
-  // Restaurant name
+  // Icon
   //
   tableColEl = $("<th>");
   tableColEl.attr("scope", "col");
-  tableColEl.text("Restaurant Name");
+  // tableColEl.addClass("col-1");
+  tableColEl.text("");
+  tableColEl.appendTo(tableRowEl);
+  //
+  // Name
+  //
+  tableColEl = $("<th>");
+  tableColEl.attr("scope", "col");
+  // tableColEl.addClass("col-4");
+  tableColEl.text("Venue Name");
   tableColEl.appendTo(tableRowEl);
   //
   // Category
   //
   tableColEl = $("<th>");
   tableColEl.attr("scope", "col");
+  // tableColEl.addClass("col-2");
   tableColEl.text("Category");
   tableColEl.appendTo(tableRowEl);
   //
@@ -425,6 +457,7 @@ function renderDeliveryInformation() {
   //
   tableColEl = $("<th>");
   tableColEl.attr("scope", "col");
+  // tableColEl.addClass("col-2");
   tableColEl.text("Address");
   tableColEl.appendTo(tableRowEl);
   //
@@ -432,6 +465,7 @@ function renderDeliveryInformation() {
   //
   tableColEl = $("<th>");
   tableColEl.attr("scope", "col");
+  // tableColEl.addClass("col-2");
   tableColEl.text("City");
   tableColEl.appendTo(tableRowEl);
   //
@@ -453,15 +487,6 @@ function renderDeliveryInformation() {
     //
     tableColEl = $("<td>");
     tableColEl.addClass("py-4");
-    tableColEl.text(cityObj.cityVenues[i].venueName);
-    tableColEl.appendTo(tableRowEl);
-    //
-    tableColEl = $("<td>");
-    tableColEl.addClass("py-4");
-    tableColEl.text(cityObj.cityVenueCategoryName);
-    tableColEl.appendTo(tableRowEl);
-    //
-    tableColEl = $("<td>");
     //
     tableButtonEl = $("<button>");
     tableButtonEl.attr("name", cityObj.cityVenues[i].venueName);
@@ -480,11 +505,29 @@ function renderDeliveryInformation() {
     }
     //
     tableButtonEl.attr("address", cityObj.cityVenues[i].venueAddress);
-    //
     tableButtonEl.addClass("btn btn-link text-info");
-    tableButtonEl.text(cityObj.cityVenues[i].venueAddress);
-    tableButtonEl.appendTo(tableColEl);
     //
+    tableImgEl = $("<img>");
+    tableImgEl.attr("src", cityObj.cityVenues[i].venueIcon);
+    tableImgEl.addClass("bg-info");
+    tableImgEl.appendTo(tableButtonEl);
+    //
+    tableButtonEl.appendTo(tableColEl);
+    tableColEl.appendTo(tableRowEl);
+    //
+    tableColEl = $("<td>");
+    tableColEl.addClass("py-4");
+    tableColEl.text(cityObj.cityVenues[i].venueName);
+    tableColEl.appendTo(tableRowEl);
+    //
+    tableColEl = $("<td>");
+    tableColEl.addClass("py-4");
+    tableColEl.text(cityObj.cityVenueCategoryName);
+    tableColEl.appendTo(tableRowEl);
+    //
+    tableColEl = $("<td>");
+    tableColEl.addClass("py-4");
+    tableColEl.text(cityObj.cityVenues[i].venueAddress);
     tableColEl.appendTo(tableRowEl);
     //
     tableColEl = $("<td>");
