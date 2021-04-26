@@ -22,22 +22,32 @@ var descriptionInput = $("#description").val().trim();
 var zipCodeInput = $("#zipcode").val().trim();
 var radiusInput = $("#radius").val().trim();
 
+var city;
 var map;
 var service;
 var infowindow;
 
 var coordinates = {
   lat: 0.0,
-  long: 0.0,
+  lng: 0.0,
+};
+
+var postalCode = {
+  zip: "",
+  name: "",
+  lat: "",
+  lng: "",
+  country: "",
 };
 
 //
 function initMap() {
+  //
   if (navigator.geolocation) {
     //If we can get the location...we change the coordinates WHERE YOU ACTUALLY ARE
     navigator.geolocation.getCurrentPosition(function (position) {
       coordinates.lat = position.coords.latitude;
-      coordinates.long = position.coords.longitude;
+      coordinates.lng = position.coords.longitude;
       renderMap();
     });
   } else {
@@ -47,19 +57,37 @@ function initMap() {
 }
 
 function renderMap() {
-  const city = new google.maps.LatLng(coordinates.lat, coordinates.long);
+  //
+  radiusInput = $("#radius").val().trim();
+  zipCodeInput = $("#zipcode").val().trim();
+  //
+  var rad = radiusInput === "" ? 5000 : radiusInput;
+  //
+  if (zipCodeInput === "") {
+    //
+    city = new google.maps.LatLng(coordinates.lat, coordinates.lng);
+    //
+  } else {
+    //
+    var zip = getLocationByPostalCode(zipCodeInput);
+    city = new google.maps.LatLng(zip.lat, zip.lon);
+    //
+  }
+  //
   map = new google.maps.Map(document.getElementById("map"), {
     center: city,
     zoom: 15,
   });
+  //
   var request = {
     location: city,
-    radius: "5000", // meters
-    type: ["restaurant"],
+    radius: rad, // meters
+    type: ["restaurant", "food"],
+    name: "Wendy's",
     openNow: true,
     fields: [
       "name",
-      "business_status",
+      /*"business_status",
       "icon",
       "types",
       "rating",
@@ -73,30 +101,90 @@ function renderMap() {
       "url",
       "address_components",
       "price_level",
-      "reviews",
+      "reviews",*/
     ],
   };
   service = new google.maps.places.PlacesService(map);
   service.nearbySearch(request, callback);
 }
+
+//
 function callback(results, status) {
   if (status == google.maps.places.PlacesServiceStatus.OK) {
-    //console.log(results);
+    //
     for (var i = 0; i < results.length; i++) {
+      //
+      request = {
+        location: city,
+        placeId: results[i].place_id,
+        openNow: true,
+        fields: [
+          "name",
+          "business_status",
+          "icon",
+          "types",
+          "rating",
+          "reviews",
+          "formatted_phone_number",
+          "address_component",
+          "opening_hours",
+          "geometry",
+          "vicinity",
+          "website",
+          "url",
+          "address_components",
+          "price_level",
+          "reviews",
+        ],
+      };
+      //
+      service = new google.maps.places.PlacesService(map);
+      service.getDetails(request, function (results, status) {
+        //
+        console.log(results);
+        //
+      });
+      //
       createMarker(results[i]);
+      //
     }
+    //
   }
 }
+
+//
 function createMarker(place) {
+  //
   if (!place.geometry || !place.geometry.location) return;
   const marker = new google.maps.Marker({
     map,
     position: place.geometry.location,
   });
+  //
   google.maps.event.addListener(marker, "click", () => {
+    //
+    infowindow = new google.maps.InfoWindow();
+    //
+    console.log(place.name + " : " + place.types);
     infowindow.setContent(place.name || "");
     infowindow.open(map);
+    //
   });
+  //
+}
+
+// Get location by postal code
+function getLocationByPostalCode(postal) {
+  //
+  var apiURL =
+    $("body").data("OWEATHER_API_SERVER") + $("body").data("OWEATHER_API_ZIP");
+  apiURL = apiURL + "?zip=" + postal;
+  apiURL = apiURL + "&appid=" + $("body").data("OWEATHER_API_KEY");
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", apiURL, false);
+  xhr.send();
+  return JSON.parse(xhr.response);
+  //
 }
 
 // Event Listener

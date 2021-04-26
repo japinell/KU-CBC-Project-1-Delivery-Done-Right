@@ -1,8 +1,74 @@
-import * as utils from "./utils.js";
+// Nutritionix API
+const NUT_API_SERVER = "https://api.nutritionix.com";
+const NUT_API_END_POINT = "/v1-1/search";
+const NUT_API_KEY = "dcb0f2394e224dd571c331c9f7960d2a";
+const NUT_API_ID = "3a3f663b";
+
+// Open Weather Map API
+const OWEATHER_API_SERVER = "https://api.openweathermap.org";
+const OWEATHER_API_WEATHER = "/data/2.5/weather";
+const OWEATHER_API_ZIP = "/geo/1.0/zip";
+const OWEATHER_API_REV = "/geo/1.0/reverse";
+const OWEATHER_API_KEY = "9dc0ecf3100ca1f98d7b3462ccb6b3df";
+
+// Foursquare API
+const FOURSQUARE_API_SERVER = "https://api.foursquare.com";
+const FOURSQUARE_SEARCH_API = "/v2/venues/search";
+const FOURSQUARE_CLIENT_ID = "VT3I5R4QZ1YUEHNVHGUKIW1ARP1GWIRBCR4WIJ1JF2TBEY3O";
+const FOURSQUARE_CLIENT_SECRET =
+  "5P0PFJJHDH2SMT3HFOQ2EKZXODJPBNQCQTSA4MYV1PM5UW34";
+
+// Yelp API
+const YELP_API_SERVER = "https://api.yelp.com";
+const YELP_SEARCH_API = "/v3/businesses/search";
+const YELP_API_KEY =
+  "8jWJ9apB_OyS-ZUbLamBcg-z73aohgWKVXJD9YO1dk_k4zUomzLlhg5ys8WsinIBcNvUq_bv2IE6sciYZN1EyIQmeuSMDGWOFFvEuna481l4r4gQT7Y3pL3Q9k2EYHYx";
+
+// Google API
+const CLIENT_ID = "0VET4EDLZ1PWXH3DJ5EPT2IPRJHAWAYHPHFB2PLJQEQDCJNV";
+const CLIENT_SECRET = "BANDE4Y5UCVVVFXYIAGZJVFA0JLMPRMIBAMK2G4ECFYAWJL0";
+//
+const credentials = {
+  "x-app-id": "3a3f663b",
+  "x-app-key": "dcb0f2394e224dd571c331c9f7960d2a",
+};
 
 // Elements
+const topDiv = $("#map");
+const bottomDiv = $("#bottomDiv");
+const inputDiv = $("#inputDiv");
+const buttonDiv = $("#results");
+const searchButton = $("#searchButton");
+//
 const restaurantList = $("#restaurantList");
 const restaurantSelection = $("#restaurantSelection");
+
+//
+var Url = "https://trackapi.nutritionix.com/v2/locations";
+var center = {};
+var searchTextInput = $("#searchText").val().trim();
+var queryInput = $("#description").val().trim();
+
+var zipCodeInput = $("#zipcode").val().trim();
+var radiusInput = $("#radius").val().trim();
+
+var city;
+var map;
+var service;
+var infowindow;
+
+var coordinates = {
+  lat: 0.0,
+  lng: 0.0,
+};
+
+var postalCode = {
+  code: "",
+  name: "",
+  lat: "",
+  lng: "",
+  country: "",
+};
 
 // Variables
 var cityObj = {
@@ -31,22 +97,182 @@ function showMessage(message) {
   console.log(message);
 }
 
-// Get food information
-function getFoodInformation() {
+// Get location by postal code
+function getLocationByPostalCode(postal) {
   //
+  var apiURL = OWEATHER_API_SERVER + OWEATHER_API_ZIP;
+  apiURL = apiURL + "?zip=" + postal;
+  apiURL = apiURL + "&appid=" + OWEATHER_API_KEY;
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", apiURL, false);
+  xhr.send();
+  return JSON.parse(xhr.response);
+  //
+}
+
+// Get location by coordinates
+function getLocationByCoordinates(lat, lng) {
+  //
+  var apiURL = OWEATHER_API_SERVER + OWEATHER_API_REV;
+  apiURL = apiURL + "?lat=" + lat;
+  apiURL = apiURL + "&lon=" + lng;
+  apiURL = apiURL + "&limit=1";
+  apiURL = apiURL + "&appid=" + OWEATHER_API_KEY;
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", apiURL, false);
+  xhr.send();
+  return JSON.parse(xhr.response);
+  //
+}
+
+//
+function initMap() {
+  //
+  if (navigator.geolocation) {
+    // If we can get the location...we change the coordinates WHERE YOU ACTUALLY ARE
+    navigator.geolocation.getCurrentPosition(function (position) {
+      //
+      coordinates.lat = position.coords.latitude;
+      coordinates.lng = position.coords.longitude;
+      //
+      renderMap();
+      //
+    });
+  } else {
+    //
+    renderMap();
+    //
+  }
+  //
+}
+
+var search = {
+  postalCode: "",
+  cityName: "",
+  radius: "",
+  foodType: "",
+  query: "",
+};
+
+//
+function renderMap() {
+  //
+  var rad, zip, qry;
+  //
+  searchTextInput = $("#searchText").val().trim();
+  zipCodeInput = $("#zipcode").val().trim();
+  radiusInput = $("#radius").val().trim();
+  queryInput = $("#description").val().trim();
+  //
+  if (zipCodeInput === "") {
+    //
+    zip = getLocationByCoordinates(coordinates.lat, coordinates.lng);
+    city = new google.maps.LatLng(coordinates.lat, coordinates.lng);
+    //
+    search.postalCode = "";
+    search.cityName = zip[0].name;
+    //
+  } else {
+    //
+    zip = getLocationByPostalCode(zipCodeInput);
+    city = new google.maps.LatLng(zip.lat, zip.lon);
+    //
+    search.postalCode = zip.code;
+    search.cityName = zip.name;
+    //
+  }
+  //
+  type = searchTextInput === "" ? "" : searchTextInput;
+  rad = radiusInput === "" ? 5000 : radiusInput;
+  qry = queryInput === "" ? "" : queryInput;
+  //
+  search.radius = rad;
+  search.foodType = type;
+  search.query = qry;
+  //
+  getDeliveryInformation(search.cityName, search.radius, search.query);
+  //
+  map = new google.maps.Map(document.getElementById("map"), {
+    center: city,
+    zoom: 15,
+  });
+  //
+  var request = {
+    location: city,
+    radius: rad, // meters
+    type: ["restaurant", "food"],
+    // name: "Wendy's",
+    openNow: true,
+    fields: [
+      "name",
+      /*"business_status",
+        "icon",
+        "types",
+        "rating",
+        "reviews",
+        "formatted_phone_number",
+        "address_component",
+        "opening_hours",
+        "geometry",
+        "vicinity",
+        "website",
+        "url",
+        "address_components",
+        "price_level",
+        "reviews",*/
+    ],
+  };
+  //
+  service = new google.maps.places.PlacesService(map);
+  service.nearbySearch(request, callback);
+  //
+}
+
+//
+function callback(results, status) {
+  //
+  if (status == google.maps.places.PlacesServiceStatus.OK) {
+    //
+    for (var i = 0; i < results.length; i++) {
+      //
+      createMarker(results[i]);
+      //
+    }
+    //
+  }
+  //
+}
+
+//
+function createMarker(place) {
+  //
+  if (!place.geometry || !place.geometry.location) return;
+  const marker = new google.maps.Marker({
+    map,
+    position: place.geometry.location,
+  });
+  //
+  google.maps.event.addListener(marker, "click", () => {
+    //
+    console.log(place);
+    //
+    infowindow = new google.maps.InfoWindow();
+    infowindow.setContent(place.name || "");
+    infowindow.open(map);
+    //
+  });
   //
 }
 
 // Get delivery information
-function getDeliveryInformation() {
+function getDeliveryInformation(city, radius, query) {
   //
-  var apiURL =
-    $("body").data("FOURSQUARE_API_SERVER") +
-    $("body").data("FOURSQUARE_SEARCH_API");
-  apiURL = apiURL + "?near=Overland Park,KS&query=burgers&v=20210424";
-  apiURL = apiURL + "&client_id=" + $("body").data("FOURSQUARE_CLIENT_ID");
-  apiURL =
-    apiURL + "&client_secret=" + $("body").data("FOURSQUARE_CLIENT_SECRET");
+  var apiURL = FOURSQUARE_API_SERVER + FOURSQUARE_SEARCH_API;
+  apiURL = apiURL + "?near=" + city;
+  apiURL = apiURL + "&radius=" + radius;
+  apiURL = apiURL + "&query=" + query + "&v=20210424";
+  apiURL = apiURL + "&client_id=" + FOURSQUARE_CLIENT_ID;
+  apiURL = apiURL + "&client_secret=" + FOURSQUARE_CLIENT_SECRET;
   //
   fetch(apiURL)
     //
@@ -154,6 +380,8 @@ function renderDeliveryInformation() {
     tableColEl,
     tableCaptionEl,
     tableButtonEl;
+  //
+  restaurantList.empty();
   //
   tableEl = $("<table>");
   tableEl.addClass("table table-hover");
@@ -287,65 +515,8 @@ function getCityVenueBySelection() {
 
 // Event listeners
 // restaurantList.on("click", "button", getCityVenueBySelection);
+searchButton.on("click", renderMap);
 restaurantList.on("click", "button", renderRestaurantInformation);
 
 // Rock & Roll
-//getFoodInformation();
-getDeliveryInformation();
-// var p = utils.getLocationByPostalCode("53147");
-// console.log(p);
-//
-// Get delivery information
-function YELPgetDeliveryInformation(headers) {
-  //
-  var apiURL =
-    YELP_API_SERVER + YELP_SEARCH_API + "?term=mexican&location=66221&price=3";
-  //
-  var headers = {
-    method: "GET",
-    // mode: "no-cors",
-    header: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      Host: YELP_API_SERVER,
-      Authorization: "Bearer " + YELP_API_KEY,
-    },
-  };
-  //
-  fetch(apiURL, headers)
-    //
-    .then(function (response) {
-      //
-      if (response.ok) {
-        //
-        return response.json();
-        //
-      } else {
-        //
-        // Handle no response error
-        //
-        showMessage("Could not retrieve any data");
-        //
-      }
-      //
-    })
-    .then(function (data) {
-      //
-      // Clear the cityWeather object
-      //
-      console.log(data);
-      //
-    })
-    .catch(function (error) {
-      //
-      // Handle other errors
-      //
-      showMessage(`Error: ${error}`);
-      //
-    });
-  //
-}
-
-//
-export { getDeliveryInformation };
-//
+//getDeliveryInformation();
