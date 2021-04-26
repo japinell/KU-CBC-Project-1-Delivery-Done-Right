@@ -5,8 +5,9 @@ const NUT_API_KEY = "dcb0f2394e224dd571c331c9f7960d2a";
 const NUT_API_ID = "3a3f663b";
 
 // Open Weather Map API
-const OWEATHER_API_SERVER = "https://api.openweathermap.org/";
-const OWEATHER_API_END_POINT = "data/2.5/weather";
+const OWEATHER_API_SERVER = "https://api.openweathermap.org";
+const OWEATHER_API_WEATHER = "/data/2.5/weather";
+const OWEATHER_API_ZIP = "/geo/1.0/zip";
 const OWEATHER_API_KEY = "9dc0ecf3100ca1f98d7b3462ccb6b3df";
 
 // Foursquare API
@@ -31,7 +32,8 @@ $("body").data("NUT_API_KEY", NUT_API_KEY);
 $("body").data("NUT_API_ID", NUT_API_ID);
 //
 $("body").data("OWEATHER_API_SERVER", OWEATHER_API_SERVER);
-$("body").data("OWEATHER_API_END_POINT", OWEATHER_API_END_POINT);
+$("body").data("OWEATHER_API_WEATHER", OWEATHER_API_WEATHER);
+$("body").data("OWEATHER_API_ZIP", OWEATHER_API_ZIP);
 $("body").data("OWEATHER_API_KEY", OWEATHER_API_KEY);
 //
 $("body").data("FOURSQUARE_API_SERVER", FOURSQUARE_API_SERVER);
