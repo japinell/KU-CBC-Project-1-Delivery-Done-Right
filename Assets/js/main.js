@@ -201,6 +201,7 @@ function renderMap() {
     location: city,
     radius: rad, // meters
     keyword: search.query,
+    type: ["restaurant"],
     // name: "Wendy's",
     openNow: true,
     fields: [
@@ -254,14 +255,17 @@ function createMarker(place) {
     position: place.geometry.location,
     title: place.name,
   });
+
   //
   google.maps.event.addListener(marker, "click", () => {
     //
     console.log(place);
     //
-    infowindow = new google.maps.InfoWindow();
-    infowindow.setContent(place.name || "");
-    infowindow.open(map);
+    infowindow = new google.maps.InfoWindow({
+      content: place.name,
+    });
+
+    infowindow.open(map, marker);
     //
   });
   //
