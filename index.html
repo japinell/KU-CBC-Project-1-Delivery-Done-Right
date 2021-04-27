@@ -15,104 +15,171 @@
   </head>
 
   <body>
+    <!-- Button trigger modal -->
+    <button
+      type="button"
+      class="btn btn-primary"
+      data-toggle="modal"
+      data-target="#exampleModal"
+    >
+      Launch demo modal
+    </button>
+
+    <!-- Modal -->
+    <div
+      class="modal fade"
+      id="exampleModal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">...</div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+            >
+              Close
+            </button>
+            <button type="button" class="btn btn-primary">Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- End of Modal -->
+    <!-- Header -->
     <header class="container-fluid bg-light text-dark mb-5 p-3">
       <div class="d-flex justify-content-center">
         <h1 class="text-align-center">Delivery Done Right</h1>
       </div>
     </header>
-    <section class="row my-4">
-      <div class="col-4 text-light">
-        <h2>Search for a venue</h2>
-        <div class="col-12 form-group" id="inputDiv">
-          <input
-            class="form-control"
-            type="text"
-            id="description"
-            placeholder="Food description... for example, 'burgers' or 'tacos'"
-          />
-          <br />
-          <input
-            class="form-control"
-            type="number"
-            id="zipcode"
-            placeholder="Zip code..."
-          />
-          <br />
-          <input
-            class="form-control"
-            type="number"
-            id="radius"
-            placeholder="Radius (in meters)..."
-          />
-          <br />
-
-          <button class="btn btn-block btn-danger" id="searchButton">
-            Search
-          </button>
-        </div>
-        <hr />
-        <h2>Search History:</h2>
-        <div id="Results" class="container">
-          <!-- Item Results go here -->
-        </div>
-      </div>
-      <div class="col-8 mb-5">
-        <div class="card" id="map">
-          <h3 class="card-header bg-info text-white">Venue Map</h3>
-          <div class="container-fluid card-body">
-            <p class="card-text">Text</p>
+    <!-- End of Header -->
+    <!-- Main -->
+    <main class="container-fluid main">
+      <div class="row">
+        <div class="col-lg-3 col-md-12 p-3 text-light">
+          <!-- Search Form -->
+          <h2 class="text-center">Search for a venue</h2>
+          <div class="col-12 form-group" id="inputDiv">
+            <input
+              class="form-control"
+              type="text"
+              id="description"
+              placeholder="Venue description... for example, 'burgers' or 'tacos'"
+            />
+            <br />
+            <input
+              class="form-control"
+              type="number"
+              id="zipcode"
+              placeholder="Zip code..."
+            />
+            <br />
+            <input
+              class="form-control"
+              type="number"
+              id="radius"
+              placeholder="Radius (in meters)... for example, 5000"
+            />
+            <br />
+            <button
+              class="btn btn-block btn-danger text-white"
+              id="searchButton"
+            >
+              Search
+            </button>
           </div>
+          <!-- End of Search Form -->
+          <hr />
+          <!-- Search History -->
+          <h2 class="text-center">Search history</h2>
+          <div class="row d-flex flex-row justify-content-around" id="Results">
+            <!-- Results go here -->
+          </div>
+          <!-- End of Search History -->
         </div>
-        <br />
-        <!-- Restaurant list -->
-        <div class="card">
-          <h3 class="card-header bg-info text-white">Venue List</h3>
-          <div class="container-fluid card card-body">
-            <div class="table-responsive-md" id="restaurantList">
-              <!-- Restaurant Information -->
+        <div class="col-lg-9 col-md-12 mb-5">
+          <div class="card" id="map">
+            <h3 class="card-header bg-info text-white">Venue Map</h3>
+            <div class="container-fluid card-body">
+              <p class="card-text">Text</p>
             </div>
           </div>
-        </div>
-        <!-- End of restaurant list -->
-        <br />
-        <!-- Restaurant information -->
-        <div class="card" id="restaurantSelection">
-          <h3 class="card-header bg-info text-white">Venue Information</h3>
-          <div class="container-fluid card-body">
-            <div id="information" class="card-text">
-              <p class="card-text">
-                Name:<span class="mx-3" id="venueName"></span>
-              </p>
-              <p class="card-text">
-                Category:<span class="mx-3" id="cityVenueCategoryName"></span>
-              </p>
-              <p class="card-text badge bg-info text-white p-2">
-                Delivery Information
-              </p>
-              <p class="card-text">
-                Address:<span class="mx-3" id="venueAddress"></span>
-              </p>
-              <p class="card-text">
-                Phone Number:<span class="mx-3" id="venuePhoneNumber"></span>
-              </p>
-              <p class="card-text">
-                Delivery (Y,N):<span class="mx-3" id="venueDeliveryYN"></span>
-              </p>
-              <p class="card-text">
-                No Contact (Y,N):<span
-                  class="mx-3"
-                  id="venueDeliveryNoContact"
-                ></span>
-              </p>
+          <br />
+          <!-- Restaurant list -->
+          <div class="card">
+            <h3 class="card-header bg-info text-white">
+              Venue List
+              <span class="px-1 font-italic" id="venueListName"></span>
+            </h3>
+            <div class="container-fluid card card-body">
+              <div class="table-responsive-md" id="venuesList">
+                <!-- Restaurant Information -->
+              </div>
             </div>
           </div>
+          <!-- End of restaurant list -->
+          <br />
+          <!-- Restaurant information -->
+          <div class="card" id="restaurantSelection">
+            <h3 class="card-header bg-info text-white">Venue Information</h3>
+            <div class="container-fluid card-body">
+              <div id="information" class="card-text">
+                <p class="card-text">
+                  Name:<span class="mx-3" id="venueName"></span>
+                </p>
+                <p class="card-text">
+                  Category:<span class="mx-3" id="cityVenueCategoryName"></span>
+                </p>
+                <p class="card-text badge bg-info text-white p-2">
+                  Delivery Information
+                </p>
+                <p class="card-text">
+                  Address:<span class="mx-3" id="venueAddress"></span>
+                </p>
+                <p class="card-text">
+                  Phone Number:<span class="mx-3" id="venuePhoneNumber"></span>
+                </p>
+                <p class="card-text">
+                  Delivery (Y,N):<span class="mx-3" id="venueDeliveryYN"></span>
+                </p>
+                <p class="card-text">
+                  No Contact (Y,N):<span
+                    class="mx-3"
+                    id="venueDeliveryNoContact"
+                  ></span>
+                </p>
+              </div>
+            </div>
+          </div>
+          <!-- End of restaurant selection -->
         </div>
-        <!-- End of restaurant selection -->
       </div>
       <hr />
-    </section>
+    </main>
+    <!-- End of Main -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!-- Latest compiled and minified JavaScript -->
+    <script
+      src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+      integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+      crossorigin="anonymous"
+    ></script>
     <script src="https://unpkg.com/dayjs@1.10.4/dayjs.min.js"></script>
     <script src="https://unpkg.com/dayjs@1.10.4/plugin/advancedFormat.js"></script>
     <script src="https://unpkg.com/dayjs@1.10.4/plugin/weekOfYear.js"></script>

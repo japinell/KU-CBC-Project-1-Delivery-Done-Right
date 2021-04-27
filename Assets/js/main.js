@@ -39,8 +39,9 @@ const bottomDiv = $("#bottomDiv");
 const inputDiv = $("#inputDiv");
 const buttonDiv = $("#results");
 const searchButton = $("#searchButton");
+const venueListName = $("#venueListName");
 //
-const restaurantList = $("#restaurantList");
+const venuesList = $("#venuesList");
 const restaurantSelection = $("#restaurantSelection");
 
 //
@@ -82,20 +83,38 @@ var cityObj = {
 };
 
 var venuesObj = {
+  venueId: "",
   venueName: "",
   venueAddress: "",
   venueCity: "",
   venueState: "",
   venuePostalCode: "",
   venueCountry: "",
+  venueCategoryId: "",
+  venueCategoryName: "",
   venueDeliveryId: "",
   venueDeliveryProviderName: "",
   venueIcon: "",
 };
 
+var search = {
+  postalCode: "",
+  cityName: "",
+  state: "",
+  radius: "",
+  foodType: "",
+  query: "",
+};
+
 // Show message
 function showMessage(message) {
+  //
   console.log(message);
+  $("#exampleModalCenter").modal("show", {
+    keyboard: true,
+    focus: true,
+  });
+  //
 }
 
 // Get location by postal code
@@ -104,9 +123,11 @@ function getLocationByPostalCode(postal) {
   var apiURL = OWEATHER_API_SERVER + OWEATHER_API_ZIP;
   apiURL = apiURL + "?zip=" + postal;
   apiURL = apiURL + "&appid=" + OWEATHER_API_KEY;
+  //
   var xhr = new XMLHttpRequest();
   xhr.open("GET", apiURL, false);
   xhr.send();
+  //
   return JSON.parse(xhr.response);
   //
 }
@@ -119,9 +140,11 @@ function getLocationByCoordinates(lat, lng) {
   apiURL = apiURL + "&lon=" + lng;
   apiURL = apiURL + "&limit=1";
   apiURL = apiURL + "&appid=" + OWEATHER_API_KEY;
+  //
   var xhr = new XMLHttpRequest();
   xhr.open("GET", apiURL, false);
   xhr.send();
+  //
   return JSON.parse(xhr.response);
   //
 }
@@ -147,20 +170,11 @@ function initMap() {
   //
 }
 
-var search = {
-  postalCode: "",
-  cityName: "",
-  radius: "",
-  foodType: "",
-  query: "",
-};
-
 //
 function renderMap() {
   //
   var rad, zip, qry;
   //
-
   zipCodeInput = $("#zipcode").val().trim();
   radiusInput = $("#radius").val().trim();
   queryInput = $("#description").val().trim();
@@ -172,6 +186,7 @@ function renderMap() {
     //
     search.postalCode = "";
     search.cityName = zip[0].name;
+    search.state = zip[0].state;
     //
   } else {
     //
@@ -180,10 +195,10 @@ function renderMap() {
     //
     search.postalCode = zip.code;
     search.cityName = zip.name;
+    search.state = zip.state;
     //
   }
   //
-
   rad = radiusInput === "" ? 5000 : radiusInput;
   qry = queryInput === "" ? "" : queryInput;
   //
@@ -191,7 +206,11 @@ function renderMap() {
 
   search.query = qry;
   //
-  getDeliveryInformation(search.cityName, search.radius, search.query);
+  getDeliveryInformation(
+    search.cityName + "," + search.state,
+    search.radius,
+    search.query
+  );
   //
   map = new google.maps.Map(document.getElementById("map"), {
     center: city,
@@ -230,7 +249,7 @@ function renderMap() {
   //
 }
 
-//
+// Create markers for each place
 function callback(results, status) {
   //
   if (status == google.maps.places.PlacesServiceStatus.OK) {
@@ -246,7 +265,7 @@ function callback(results, status) {
   //
 }
 
-//
+// Create infoWindow
 function createMarker(place) {
   //
   if (!place.geometry || !place.geometry.location) return;
@@ -259,12 +278,10 @@ function createMarker(place) {
   //
   google.maps.event.addListener(marker, "click", () => {
     //
-    console.log(place);
-    //
     infowindow = new google.maps.InfoWindow({
       content: place.name,
     });
-
+    //
     infowindow.open(map, marker);
     //
   });
@@ -277,7 +294,7 @@ function getDeliveryInformation(city, radius, query) {
   var apiURL = FOURSQUARE_API_SERVER + FOURSQUARE_SEARCH_API;
   apiURL = apiURL + "?near=" + city;
   apiURL = apiURL + "&radius=" + radius;
-  // apiURL = apiURL + "&categoryId=4d4b7105d754a06374d81259";
+  apiURL = apiURL + "&categoryId=4d4b7105d754a06374d81259"; // Food
   apiURL = apiURL + "&query=" + query;
   apiURL = apiURL + "&v=20210424";
   apiURL = apiURL + "&client_id=" + FOURSQUARE_CLIENT_ID;
@@ -304,87 +321,117 @@ function getDeliveryInformation(city, radius, query) {
       //
       // Store city object
       //
-      console.log(data);
-      //
-      cityObj = {
-        cityName: "",
-        cityDisplayName: "",
-        cityLatitude: "",
-        cityLongitude: "",
-        cityVenueCategoryName: "",
-        cityVenueCategoryShortName: "",
-        cityVenues: [],
-      };
-      //
-      cityObj.cityName = data.response.geocode.feature.name;
-      cityObj.cityDisplayName = data.response.geocode.feature.displayName;
-      cityObj.cityLatitude = data.response.geocode.feature.geometry.center.lat;
-      cityObj.cityLongitude = data.response.geocode.feature.geometry.center.lng;
-      cityObj.cityVenueCategoryName =
-        data.response.venues[0].categories[0].name;
-      cityObj.cityVenueCategoryShortName =
-        data.response.venues[0].categories[0].shortName;
-      //
-      // Store city venues
-      //
-      for (var i = 0, l = data.response.venues.length; i < l; i++) {
+      if (data.response.venues.length > 0) {
         //
-        venuesObj = {
-          venueName: "",
-          venueAddress: "",
-          venueCity: "",
-          venueState: "",
-          venuePostalCode: "",
-          venueCountry: "",
-          venueDeliveryId: "",
-          venueDeliveryProviderName: "",
-          venueIcon: "",
+        cityObj = {
+          cityName: "",
+          cityDisplayName: "",
+          cityLatitude: "",
+          cityLongitude: "",
+          cityVenueCategoryName: "",
+          cityVenueCategoryShortName: "",
+          cityVenues: [],
         };
         //
-        venuesObj.venueName = data.response.venues[i].name;
-        venuesObj.venueAddress = data.response.venues[i].location.address;
-        venuesObj.venueCity = data.response.venues[i].location.city;
-        venuesObj.venueState = data.response.venues[i].location.state;
-        venuesObj.venuePostalCode = data.response.venues[i].location.postalCode;
-        venuesObj.venueCountry = data.response.venues[i].location.country;
+        cityObj.cityName = data.response.geocode.feature.name;
+        cityObj.cityDisplayName = data.response.geocode.feature.highlightedName;
+        cityObj.cityLatitude =
+          data.response.geocode.feature.geometry.center.lat;
+        cityObj.cityLongitude =
+          data.response.geocode.feature.geometry.center.lng;
+        cityObj.cityVenueCategoryName =
+          data.response.venues[0].categories[0].name;
+        cityObj.cityVenueCategoryShortName =
+          data.response.venues[0].categories[0].shortName;
         //
-        // Some venues have no delivery, so check for that
+        // Store city venues
         //
-        if (data.response.venues[i].hasOwnProperty("delivery")) {
+        for (var i = 0, l = data.response.venues.length; i < l; i++) {
           //
-          venuesObj.venueDeliveryId = data.response.venues[i].delivery.id;
-          venuesObj.venueDeliveryProviderName =
-            data.response.venues[i].delivery.provider.name;
+          venuesObj = {
+            venueId: "",
+            venueName: "",
+            venueAddress: "",
+            venueCity: "",
+            venueState: "",
+            venuePostalCode: "",
+            venueCountry: "",
+            venueCategoryId: "",
+            venueCategoryName: "",
+            venueDeliveryId: "",
+            venueDeliveryProviderName: "",
+            venueIcon: "",
+          };
           //
-        } else {
+          venuesObj.venueId = data.response.venues[i].id;
+          venuesObj.venueName = data.response.venues[i].name;
+          venuesObj.venueAddress = data.response.venues[i].location.address;
+          venuesObj.venueCity = data.response.venues[i].location.city;
+          venuesObj.venueState = data.response.venues[i].location.state;
+          venuesObj.venuePostalCode =
+            data.response.venues[i].location.postalCode;
+          venuesObj.venueCountry = data.response.venues[i].location.country;
           //
-          venuesObj.venueDeliveryId = "";
-          venuesObj.venueDeliveryProviderName = "";
+          if (
+            data.response.venues[i].hasOwnProperty("categories") &&
+            data.response.venues[i].categories.length > 0
+          ) {
+            //
+            venuesObj.venueCategoryId =
+              data.response.venues[i].categories[0].id;
+            venuesObj.venueCategoryName =
+              data.response.venues[i].categories[0].shortName;
+            //
+          } else {
+            //
+            venuesObj.venueCategoryId = "";
+            venuesObj.venueCategoryName = "";
+            //
+          }
+          //
+          // Some venues have no delivery, so check for that
+          //
+          if (data.response.venues[i].hasOwnProperty("delivery")) {
+            //
+            venuesObj.venueDeliveryId = data.response.venues[i].delivery.id;
+            venuesObj.venueDeliveryProviderName =
+              data.response.venues[i].delivery.provider.name;
+            //
+          } else {
+            //
+            venuesObj.venueDeliveryId = "";
+            venuesObj.venueDeliveryProviderName = "";
+            //
+          }
+          //
+          if (
+            data.response.venues[i].hasOwnProperty("categories") &&
+            data.response.venues[i].categories.length > 0 &&
+            data.response.venues[i].categories[0].hasOwnProperty("icon")
+          ) {
+            //
+            venuesObj.venueIcon =
+              data.response.venues[i].categories[0].icon.prefix +
+              "32" +
+              data.response.venues[i].categories[0].icon.suffix;
+            //
+          } else {
+            //
+            venuesObj.venueIcon = "";
+            //
+          }
+          //
+          cityObj.cityVenues.push(venuesObj);
           //
         }
         //
-        if (
-          data.response.venues[i].hasOwnProperty("categories") &&
-          data.response.venues[i].categories.length > 0 &&
-          data.response.venues[i].categories[0].hasOwnProperty("icon")
-        ) {
-          //
-          venuesObj.venueIcon =
-            data.response.venues[i].categories[0].icon.prefix +
-            "bg_32" +
-            data.response.venues[i].categories[0].icon.suffix;
-          //
-        } else {
-          //
-          venuesObj.venueIcon = "";
-          //
-        }
+        renderDeliveryInformation();
         //
-        cityObj.cityVenues.push(venuesObj);
+      } else {
+        //
+        showMessage(`No data retrieved for that venue`);
         //
       }
-      //
-      renderDeliveryInformation();
       //
     })
     .catch(function (error) {
@@ -409,7 +456,9 @@ function renderDeliveryInformation() {
     tableButtonEl,
     tableImgEl;
   //
-  restaurantList.empty();
+  venuesList.empty();
+  //
+  venueListName.html(" - " + cityObj.cityDisplayName);
   //
   tableEl = $("<table>");
   tableEl.addClass("table table-hover");
@@ -425,7 +474,7 @@ function renderDeliveryInformation() {
   //
   tableColEl = $("<th>");
   tableColEl.attr("scope", "col");
-  // tableColEl.addClass("col-1");
+  tableColEl.addClass("text-center");
   tableColEl.text("#");
   tableColEl.appendTo(tableRowEl);
   //
@@ -461,14 +510,6 @@ function renderDeliveryInformation() {
   tableColEl.text("Address");
   tableColEl.appendTo(tableRowEl);
   //
-  // City
-  //
-  tableColEl = $("<th>");
-  tableColEl.attr("scope", "col");
-  // tableColEl.addClass("col-2");
-  tableColEl.text("City");
-  tableColEl.appendTo(tableRowEl);
-  //
   tableRowEl.appendTo(tableHeaderEl);
   //
   tableHeaderEl.appendTo(tableEl);
@@ -481,38 +522,44 @@ function renderDeliveryInformation() {
     //
     tableColEl = $("<td>");
     tableColEl.attr("scope", "row");
-    tableColEl.addClass("py-4");
+    tableColEl.addClass("py-4 text-right");
     tableColEl.text(i + 1);
     tableColEl.appendTo(tableRowEl);
     //
     tableColEl = $("<td>");
-    tableColEl.addClass("py-4");
+    tableColEl.addClass("py-2");
     //
-    tableButtonEl = $("<button>");
-    tableButtonEl.attr("name", cityObj.cityVenues[i].venueName);
-    tableButtonEl.attr("category", cityObj.cityVenueCategoryName);
-    //
-    if (cityObj.cityVenues[i].venueDeliveryProviderName != "") {
+    if (cityObj.cityVenues[i].venueIcon !== "") {
       //
-      tableButtonEl.attr("delivery", "Y");
-      tableButtonEl.attr("contact", " ");
+      tableButtonEl = $("<button>");
+      tableButtonEl.attr("id", cityObj.cityVenues[i].venueId);
+      tableButtonEl.attr("name", cityObj.cityVenues[i].venueName);
+      tableButtonEl.attr("category", cityObj.cityVenueCategoryName);
       //
-    } else {
+      if (cityObj.cityVenues[i].venueDeliveryProviderName != "") {
+        //
+        tableButtonEl.attr("delivery", "Y");
+        tableButtonEl.attr("contact", " ");
+        //
+      } else {
+        //
+        tableButtonEl.attr("delivery", "N");
+        tableButtonEl.attr("contact", "N");
+        //
+      }
       //
-      tableButtonEl.attr("delivery", "N");
-      tableButtonEl.attr("contact", "N");
+      tableButtonEl.attr("address", cityObj.cityVenues[i].venueAddress);
+      tableButtonEl.addClass("btn btn-info");
+      //
+      tableImgEl = $("<img>");
+      tableImgEl.attr("src", cityObj.cityVenues[i].venueIcon);
+      tableImgEl.addClass("bg-info");
+      tableImgEl.appendTo(tableButtonEl);
+      //
+      tableButtonEl.appendTo(tableColEl);
       //
     }
     //
-    tableButtonEl.attr("address", cityObj.cityVenues[i].venueAddress);
-    tableButtonEl.addClass("btn btn-link text-info");
-    //
-    tableImgEl = $("<img>");
-    tableImgEl.attr("src", cityObj.cityVenues[i].venueIcon);
-    tableImgEl.addClass("bg-info");
-    tableImgEl.appendTo(tableButtonEl);
-    //
-    tableButtonEl.appendTo(tableColEl);
     tableColEl.appendTo(tableRowEl);
     //
     tableColEl = $("<td>");
@@ -522,17 +569,12 @@ function renderDeliveryInformation() {
     //
     tableColEl = $("<td>");
     tableColEl.addClass("py-4");
-    tableColEl.text(cityObj.cityVenueCategoryName);
+    tableColEl.text(cityObj.cityVenues[i].venueCategoryName);
     tableColEl.appendTo(tableRowEl);
     //
     tableColEl = $("<td>");
     tableColEl.addClass("py-4");
     tableColEl.text(cityObj.cityVenues[i].venueAddress);
-    tableColEl.appendTo(tableRowEl);
-    //
-    tableColEl = $("<td>");
-    tableColEl.addClass("py-4");
-    tableColEl.text(cityObj.cityVenues[i].venueCity);
     tableColEl.appendTo(tableRowEl);
     //
     tableRowEl.appendTo(tableBodyEl);
@@ -541,12 +583,12 @@ function renderDeliveryInformation() {
   //
   tableBodyEl.appendTo(tableEl);
   //
-  tableEl.appendTo(restaurantList);
+  tableEl.appendTo(venuesList);
   //
 }
 
-// Render restaurant information
-function renderRestaurantInformation() {
+// Render venue information
+function renderVenueInformation() {
   //
   $("#venueName").text($(this).attr("name"));
   $("#cityVenueCategoryName").text($(this).attr("category"));
@@ -564,9 +606,14 @@ function getCityVenueBySelection() {
 }
 
 // Event listeners
-// restaurantList.on("click", "button", getCityVenueBySelection);
+// venuesList.on("click", "button", getCityVenueBySelection);
 searchButton.on("click", renderMap);
-restaurantList.on("click", "button", renderRestaurantInformation);
+venuesList.on("click", "button", renderVenueInformation);
 
 // Rock & Roll
 //getDeliveryInformation();
+//$("#exampleModalCenter").modal({ show: false });
+
+$("#showModal").click(function () {
+  $("#exampleModalCenter").modal({ show: true });
+});
