@@ -12,6 +12,12 @@ body {
 hr {
   background-color: white;
 }
+
+button:hover {
+  font-size: 20px;
+  transition: all 0.1s ease-in-out;
+}
+
 #map {
   height: 600px;
 }
