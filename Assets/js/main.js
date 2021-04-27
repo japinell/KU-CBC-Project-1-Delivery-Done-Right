@@ -173,7 +173,7 @@ function initMap() {
 //
 function renderMap() {
   //
-  var rad, zip, qry;
+  var cty, rad, zip, qry;
   //
   zipCodeInput = $("#zipcode").val().trim();
   radiusInput = $("#radius").val().trim();
@@ -191,11 +191,13 @@ function renderMap() {
   } else {
     //
     zip = getLocationByPostalCode(zipCodeInput);
+    search.postalCode = zip.code;
     city = new google.maps.LatLng(zip.lat, zip.lon);
     //
-    search.postalCode = zip.code;
-    search.cityName = zip.name;
-    search.state = zip.state;
+    zip = getLocationByCoordinates(zip.lat, zip.lon);
+    //
+    search.cityName = zip[0].name;
+    search.state = zip[0].state;
     //
   }
   //
@@ -319,9 +321,11 @@ function getDeliveryInformation(city, radius, query) {
     })
     .then(function (data) {
       //
-      // Store city object
+      console.log(data);
       //
       if (data.response.venues.length > 0) {
+        //
+        // Store city object
         //
         cityObj = {
           cityName: "",
