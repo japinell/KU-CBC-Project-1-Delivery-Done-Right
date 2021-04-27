@@ -45,7 +45,7 @@ const venuesList = $("#venuesList");
 const restaurantSelection = $("#restaurantSelection");
 
 //
-var Url = "https://trackapi.nutritionix.com/v2/locations";
+
 var center = {};
 
 var queryInput = $("#description").val().trim();
@@ -160,6 +160,7 @@ function initMap() {
       coordinates.lng = position.coords.longitude;
       //
       renderMap();
+
       //
     });
   } else {
@@ -179,6 +180,7 @@ function renderMap() {
   radiusInput = $("#radius").val().trim();
   queryInput = $("#description").val().trim();
   //
+
   if (zipCodeInput === "") {
     //
     zip = getLocationByCoordinates(coordinates.lat, coordinates.lng);
@@ -207,7 +209,46 @@ function renderMap() {
   search.radius = rad;
 
   search.query = qry;
-  //
+  //Nutrition API Call
+  $.ajax({
+    url: "https://trackapi.nutritionix.com/v2/locations",
+    headers: credentials,
+    method: "GET",
+    contentType: "application/json",
+    data: {
+      ll: zip[0].lat + "," + zip[0].lon,
+      distance: "5km",
+      limit: 20,
+    },
+  })
+    .then(function (response) {
+      var brand_ids = response.locations.map(function (location) {
+        return location.brand_id;
+      });
+
+      console.log(response);
+
+      return $.ajax({
+        url: "https://trackapi.nutritionix.com/v2/search/instant",
+        headers: credentials,
+        method: "GET",
+        contentType: "application/json",
+        data: {
+          query: queryInput || "salad",
+          branded: true,
+          self: false,
+          common: true,
+          brand_ids: JSON.stringify(brand_ids),
+        },
+      });
+    })
+    .then(function (response) {
+      console.log(response);
+    })
+    .catch(function (response) {
+      console.error(response);
+      $("#Results").html().response;
+    });
   getDeliveryInformation(
     search.cityName + "," + search.state,
     search.radius,
@@ -616,6 +657,11 @@ venuesList.on("click", "button", renderVenueInformation);
 
 // Rock & Roll
 //getDeliveryInformation();
+function getApi() {
+  //
+  //
+}
+
 //$("#exampleModalCenter").modal({ show: false });
 
 $("#showModal").click(function () {
