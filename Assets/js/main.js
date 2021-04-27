@@ -174,12 +174,13 @@ function initMap() {
 //
 function renderMap() {
   //
-  var rad, zip, qry;
+  var cty, rad, zip, qry;
   //
   zipCodeInput = $("#zipcode").val().trim();
   radiusInput = $("#radius").val().trim();
   queryInput = $("#description").val().trim();
   //
+
   if (zipCodeInput === "") {
     //
     zip = getLocationByCoordinates(coordinates.lat, coordinates.lng);
@@ -192,11 +193,13 @@ function renderMap() {
   } else {
     //
     zip = getLocationByPostalCode(zipCodeInput);
+    search.postalCode = zip.code;
     city = new google.maps.LatLng(zip.lat, zip.lon);
     //
-    search.postalCode = zip.code;
-    search.cityName = zip.name;
-    search.state = zip.country;
+    zip = getLocationByCoordinates(zip.lat, zip.lon);
+    //
+    search.cityName = zip[0].name;
+    search.state = zip[0].state;
     //
   }
   //
@@ -206,7 +209,46 @@ function renderMap() {
   search.radius = rad;
 
   search.query = qry;
-  //
+  //Nutrition API Call
+  $.ajax({
+    url: "https://trackapi.nutritionix.com/v2/locations",
+    headers: credentials,
+    method: "GET",
+    contentType: "application/json",
+    data: {
+      ll: zip[0].lat + "," + zip[0].lon,
+      distance: "5km",
+      limit: 20,
+    },
+  })
+    .then(function (response) {
+      var brand_ids = response.locations.map(function (location) {
+        return location.brand_id;
+      });
+
+      console.log(response);
+
+      return $.ajax({
+        url: "https://trackapi.nutritionix.com/v2/search/instant",
+        headers: credentials,
+        method: "GET",
+        contentType: "application/json",
+        data: {
+          query: queryInput || "salad",
+          branded: true,
+          self: false,
+          common: true,
+          brand_ids: JSON.stringify(brand_ids),
+        },
+      });
+    })
+    .then(function (response) {
+      console.log(response);
+    })
+    .catch(function (response) {
+      console.error(response);
+      $("#Results").html().response;
+    });
   getDeliveryInformation(
     search.cityName + "," + search.state,
     search.radius,
@@ -320,9 +362,11 @@ function getDeliveryInformation(city, radius, query) {
     })
     .then(function (data) {
       //
-      // Store city object
+      console.log(data);
       //
       if (data.response.venues.length > 0) {
+        //
+        // Store city object
         //
         cityObj = {
           cityName: "",
@@ -615,47 +659,7 @@ venuesList.on("click", "button", renderVenueInformation);
 //getDeliveryInformation();
 function getApi() {
   //
-
   //
-  $.ajax({
-    url: "https://trackapi.nutritionix.com/v2/locations",
-    headers: credentials,
-    method: "GET",
-    contentType: "application/json",
-    data: {
-      ll: center.lat + "," + center.lng,
-      distance: "5km",
-      limit: 20,
-    },
-  })
-    .then(function (response) {
-      var brand_ids = response.locations.map(function (location) {
-        return location.brand_id;
-      });
-
-      console.log(response);
-
-      return $.ajax({
-        url: "https://trackapi.nutritionix.com/v2/search/instant",
-        headers: credentials,
-        method: "GET",
-        contentType: "application/json",
-        data: {
-          query: "salad",
-          branded: true,
-          self: false,
-          common: false,
-          brand_ids: JSON.stringify(brand_ids),
-        },
-      });
-    })
-    .then(function (response) {
-      console.log(response);
-    })
-    .catch(function (response) {
-      console.error(response);
-      $("#error").show().JSONView(response.responseJSON);
-    });
 }
 
 //$("#exampleModalCenter").modal({ show: false });
