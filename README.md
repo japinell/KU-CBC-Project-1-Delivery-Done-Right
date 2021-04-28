@@ -4,9 +4,10 @@
 
 The user will be able to search and filter restaurants by certain features. Features will include the restaurants near the user, delivery/no delivery/no contact delivery, nutrition & safety information. Future feature: extend the program to include grocery delivery information. The application will be using the following APIs:
 
-- https://api.fda.gov/food
-- https://www.nutritionix.com/business/api
-- https://maps.googleapis.com/maps/api/place/findplacefromtext/
+- https://api.openweathermap.org
+- https://api.foursquare.com
+- https://trackapi.nutritionix.com/v2/locations
+- https://maps.googleapis.com/maps/api/places
 
 ## User Story
 

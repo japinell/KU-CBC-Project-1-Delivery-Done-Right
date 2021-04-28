@@ -6,7 +6,9 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <link
       rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+      integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l"
+      crossorigin="anonymous"
     />
     <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
     <link rel="stylesheet" href="./Assets/css/reset.css" />
@@ -26,23 +28,25 @@
     <!-- Main -->
     <main class="container">
       <!-- Modal -->
+      <!-- Button trigger modal -->
       <button
         type="button"
         class="btn btn-primary"
         data-toggle="modal"
         data-target="#exampleModal"
       >
-        Modal
+        Launch demo modal
       </button>
+
+      <!-- Modal -->
       <div
         class="modal fade"
         id="exampleModal"
         tabindex="-1"
-        role="dialog"
         aria-labelledby="exampleModalLabel"
         aria-hidden="true"
       >
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
@@ -108,10 +112,177 @@
           <!-- End of Search Form -->
           <hr />
           <!-- Search History -->
-          <h2 class="text-center">Search history</h2>
-          <div class="row d-flex flex-row justify-content-around" id="Results">
-            <!-- Results go here -->
-          </div>
+          <!-- <h2 class="text-center">Suggested Places to Eat</h2>
+          <div id="branded">Text</div>
+
+          <section class="performance-facts">
+            <header class="performance-facts__header">
+              <h1 class="performance-facts__title">Nutrition Facts</h1>
+              <p>Serving Size</p>
+              <p>Serving Per Container 8</p>
+            </header>
+            <table class="performance-facts__table">
+              <thead>
+                <tr>
+                  <th colspan="3" class="small-info">Amount Per Serving</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th colspan="2">
+                    <b>Calories</b>
+                    200
+                  </th>
+                  <td>Calories from Fat 130</td>
+                </tr>
+                <tr class="thick-row">
+                  <td colspan="3" class="small-info">
+                    <b>% Daily Value*</b>
+                  </td>
+                </tr>
+                <tr>
+                  <th colspan="2">
+                    <b>Total Fat</b>
+                    14g
+                  </th>
+                  <td>
+                    <b>22%</b>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="blank-cell"></td>
+                  <th>Saturated Fat 9g</th>
+                  <td>
+                    <b>22%</b>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="blank-cell"></td>
+                  <th>Trans Fat 0g</th>
+                  <td></td>
+                </tr>
+                <tr>
+                  <th colspan="2">
+                    <b>Cholesterol</b>
+                    55mg
+                  </th>
+                  <td>
+                    <b>18%</b>
+                  </td>
+                </tr>
+                <tr>
+                  <th colspan="2">
+                    <b>Sodium</b>
+                    40mg
+                  </th>
+                  <td>
+                    <b>2%</b>
+                  </td>
+                </tr>
+                <tr>
+                  <th colspan="2">
+                    <b>Total Carbohydrate</b>
+                    17g
+                  </th>
+                  <td>
+                    <b>6%</b>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="blank-cell"></td>
+                  <th>Dietary Fiber 1g</th>
+                  <td>
+                    <b>4%</b>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="blank-cell"></td>
+                  <th>Sugars 14g</th>
+                  <td></td>
+                </tr>
+                <tr class="thick-end">
+                  <th colspan="2">
+                    <b>Protein</b>
+                    3g
+                  </th>
+                  <td></td>
+                </tr>
+              </tbody>
+            </table>
+
+            <table class="performance-facts__table--grid">
+              <tbody>
+                <tr>
+                  <td colspan="2">Vitamin A 10%</td>
+                  <td>Vitamin C 0%</td>
+                </tr>
+                <tr class="thin-end">
+                  <td colspan="2">Calcium 10%</td>
+                  <td>Iron 6%</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <p class="small-info">
+              * Percent Daily Values are based on a 2,000 calorie diet. Your
+              daily values may be higher or lower depending on your calorie
+              needs:
+            </p>
+
+            <table class="performance-facts__table--small small-info">
+              <thead>
+                <tr>
+                  <td colspan="2"></td>
+                  <th>Calories:</th>
+                  <th>2,000</th>
+                  <th>2,500</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th colspan="2">Total Fat</th>
+                  <td>Less than</td>
+                  <td>65g</td>
+                  <td>80g</td>
+                </tr>
+                <tr>
+                  <td class="blank-cell"></td>
+                  <th>Saturated Fat</th>
+                  <td>Less than</td>
+                  <td>20g</td>
+                  <td>25g</td>
+                </tr>
+                <tr>
+                  <th colspan="2">Cholesterol</th>
+                  <td>Less than</td>
+                  <td>300mg</td>
+                  <td>300 mg</td>
+                </tr>
+                <tr>
+                  <th colspan="2">Sodium</th>
+                  <td>Less than</td>
+                  <td>2,400mg</td>
+                  <td>2,400mg</td>
+                </tr>
+                <tr>
+                  <th colspan="3">Total Carbohydrate</th>
+                  <td>300g</td>
+                  <td>375g</td>
+                </tr>
+                <tr>
+                  <td class="blank-cell"></td>
+                  <th colspan="2">Dietary Fiber</th>
+                  <td>25g</td>
+                  <td>30g</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <p class="small-info">Calories per gram:</p>
+            <p class="small-info text-center">
+              Fat 9 &bull; Carbohydrate 4 &bull; Protein 4
+            </p>
+          </section> -->
           <!-- End of Search History -->
         </div>
         <div class="col-lg-9 col-md-12 mb-5">
@@ -137,36 +308,11 @@
           <!-- End of restaurant list -->
           <br />
           <!-- Restaurant information -->
-          <div class="card" id="restaurantSelection">
-            <h3 class="card-header bg-info text-white">Venue Information</h3>
-            <div class="container-fluid card-body">
-              <div id="information" class="card-text">
-                <p class="card-text">
-                  Name:<span class="mx-3" id="venueName"></span>
-                </p>
-                <p class="card-text">
-                  Category:<span class="mx-3" id="cityVenueCategoryName"></span>
-                </p>
-                <p class="card-text badge bg-info text-white p-2">
-                  Delivery Information
-                </p>
-                <p class="card-text">
-                  Address:<span class="mx-3" id="venueAddress"></span>
-                </p>
-                <p class="card-text">
-                  Phone Number:<span class="mx-3" id="venuePhoneNumber"></span>
-                </p>
-                <p class="card-text">
-                  Delivery (Y,N):<span class="mx-3" id="venueDeliveryYN"></span>
-                </p>
-                <p class="card-text">
-                  No Contact (Y,N):<span
-                    class="mx-3"
-                    id="venueDeliveryNoContact"
-                  ></span>
-                </p>
-              </div>
-            </div>
+          <div class="card">
+            <h3 class="card-header bg-success text-white">
+              Nutrition Information
+            </h3>
+            <div id="nutritionInformation"></div>
           </div>
           <!-- End of restaurant selection -->
         </div>
@@ -175,30 +321,22 @@
     </main>
     <!-- End of Main -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
     <!-- Latest compiled and minified JavaScript -->
     <script
-      src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
-      integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+      src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+      integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
       crossorigin="anonymous"
     ></script>
-    <script src="https://unpkg.com/dayjs@1.10.4/dayjs.min.js"></script>
-    <script src="https://unpkg.com/dayjs@1.10.4/plugin/advancedFormat.js"></script>
-    <script src="https://unpkg.com/dayjs@1.10.4/plugin/weekOfYear.js"></script>
-
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js"
+      integrity="sha384-+YQ4JLhjyBLPDQt//I+STsc9iw4uQqACwlvpslubQzn4u2UU2UFM80nGisd026JF"
+      crossorigin="anonymous"
+    ></script>
     <script src="./Assets/js/main.js" defer></script>
     <script
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDDaGlFyaTlqi8gx413HZsEpGZWnzjIbQk&callback=initMap&libraries=places&v=weekly&rankby=distance"
       async
     ></script>
-
-    <!--
-    <script src="./Assets/js/nutritionix.js"></script>
-    <script src="./Assets/js/config.js" defer></script>
-    <script type="module" src="./Assets/js/delivery.js"></script>
-    -->
-    <script>
-      dayjs.extend(window.dayjs_plugin_advancedFormat);
-      dayjs.extend(window.dayjs_plugin_weekOfYear);
-    </script>
   </body>
 </html>
