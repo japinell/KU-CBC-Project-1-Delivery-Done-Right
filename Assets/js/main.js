@@ -34,8 +34,13 @@ const YELP_API_KEY =
 const CLIENT_ID = "0VET4EDLZ1PWXH3DJ5EPT2IPRJHAWAYHPHFB2PLJQEQDCJNV";
 const CLIENT_SECRET = "BANDE4Y5UCVVVFXYIAGZJVFA0JLMPRMIBAMK2G4ECFYAWJL0";
 //
+// Nutritionix API
 //
-//
+const NUTRITIONIX_API_SERVER = "https://trackapi.nutritionix.com";
+const NUTRITIONIX_LOCATIONS_API = "/v2/locations";
+const NUTRITIONIX_INSTANT_API = "/v2/search/instant";
+const NUTRITIONIX_APP_ID = "3a3f663b";
+const NUTRITIONIX_APP_KEY = "dcb0f2394e224dd571c331c9f7960d2a";
 const credentials = {
   "x-app-id": "3a3f663b",
   "x-app-key": "dcb0f2394e224dd571c331c9f7960d2a",
@@ -245,8 +250,11 @@ function renderMap() {
   //Nutrition API Call
   //
   $.ajax({
-    url: "https://trackapi.nutritionix.com/v2/locations",
-    headers: credentials,
+    url: NUTRITIONIX_API_SERVER + NUTRITIONIX_LOCATIONS_API, // "https://trackapi.nutritionix.com/v2/locations",
+    headers: {
+      "x-app-id": NUTRITIONIX_APP_ID,
+      "x-app-key": NUTRITIONIX_APP_KEY,
+    }, // credentials,
     method: "GET",
     contentType: "application/json",
     data: {
@@ -264,12 +272,15 @@ function renderMap() {
       //
       //console.log(response);
       return $.ajax({
-        url: "https://trackapi.nutritionix.com/v2/search/instant",
-        headers: credentials,
+        url: NUTRITIONIX_API_SERVER + NUTRITIONIX_INSTANT_API, // "https://trackapi.nutritionix.com/v2/search/instant",
+        headers: {
+          "x-app-id": NUTRITIONIX_APP_ID,
+          "x-app-key": NUTRITIONIX_APP_KEY,
+        }, // credentials,
         method: "GET",
         contentType: "application/json",
         data: {
-          query: queryInput || "salad",
+          query: queryInput || "salad", // default
           branded: true,
           self: false,
           common: true,
