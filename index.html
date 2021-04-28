@@ -27,29 +27,29 @@
     <!-- End of Header -->
     <!-- Main -->
     <main class="container">
-      <!-- Modal -->
-      <!-- Button trigger modal -->
+      <!-- Venue Information -->
       <button
         type="button"
         class="btn btn-primary"
         data-toggle="modal"
-        data-target="#exampleModal"
+        data-target="#venueInformation"
+        id="showVenueInformation"
       >
-        Launch demo modal
+        Show
       </button>
-
-      <!-- Modal -->
       <div
         class="modal fade"
-        id="exampleModal"
+        id="venueInformation"
         tabindex="-1"
-        aria-labelledby="exampleModalLabel"
+        aria-labelledby="venueInformationLabel"
         aria-hidden="true"
       >
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-dialog-centered">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+              <h5 class="modal-title" id="venueInformationLabel">
+                Venue Information
+              </h5>
               <button
                 type="button"
                 class="close"
@@ -59,23 +59,29 @@
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
-            <div class="modal-body">...</div>
+            <div class="modal-body" id="venueInformation">
+              <p>Venue Name: <span id="venueName"></span></p>
+              <p>Category: <span id="venueCategory"></span></p>
+              <p>Address: <span id="venueAddress"></span></p>
+              <p>Delivery (Y, N): <span id="venueDeliveryYN"></span></p>
+              <p>
+                No Contact (Y, N): <span id="venueDeliveryNoContact"></span>
+              </p>
+            </div>
             <div class="modal-footer">
               <button
                 type="button"
-                class="btn btn-secondary"
+                class="btn btn-primary"
                 data-dismiss="modal"
               >
                 Close
-              </button>
-              <button type="button" class="btn btn-primary">
-                Save changes
               </button>
             </div>
           </div>
         </div>
       </div>
-      <!-- End of Modal -->
+      <!-- End of Venue Information -->
+      <!-- Search Form/History -->
       <div class="row">
         <div class="col-lg-3 col-md-12 p-3 text-light">
           <!-- Search Form -->
@@ -289,11 +295,11 @@
           <div class="card" id="map">
             <h3 class="card-header bg-info text-white">Venue Map</h3>
             <div class="container-fluid card-body">
-              <p class="card-text">Text</p>
+              <p class="card-text">Loading...</p>
             </div>
           </div>
           <br />
-          <!-- Restaurant list -->
+          <!-- Venue List -->
           <div class="card">
             <h3 class="card-header bg-info text-white">
               Venue List
@@ -301,27 +307,27 @@
             </h3>
             <div class="container-fluid card card-body">
               <div class="table-responsive-md" id="venuesList">
-                <!-- Restaurant Information -->
+                <!-- Venue Information -->
               </div>
             </div>
           </div>
-          <!-- End of restaurant list -->
+          <!-- End of Venue List -->
           <br />
-          <!-- Restaurant information -->
+          <!-- Nutrition Information -->
           <div class="card">
             <h3 class="card-header bg-success text-white">
               Nutrition Information
             </h3>
             <div id="nutritionInformation"></div>
           </div>
-          <!-- End of restaurant selection -->
+          <!-- End of Nutrition Information -->
         </div>
       </div>
+      <!-- End of Search Form/History -->
       <hr />
     </main>
     <!-- End of Main -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-
     <!-- Latest compiled and minified JavaScript -->
     <script
       src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
