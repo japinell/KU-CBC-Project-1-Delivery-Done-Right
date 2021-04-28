@@ -885,9 +885,5 @@ venuesList.on("click", "button", renderVenueInformation);
 // Rock & Roll
 //getDeliveryInformation();
 //
-$("#showModal1").click(function () {
-  //
-  $("#exampleModalCenter1").modal({ show: true });
-  //
-});
+$("#showVenueInformation").hide();
 //
