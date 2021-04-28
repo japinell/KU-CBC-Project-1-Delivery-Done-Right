@@ -10,6 +10,12 @@
       integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l"
       crossorigin="anonymous"
     />
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+      integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf"
+      crossorigin="anonymous"
+    />
     <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
     <link rel="stylesheet" href="./Assets/css/reset.css" />
     <link rel="stylesheet" href="./Assets/css/css.css" />
@@ -304,9 +310,26 @@
             <h3 class="card-header bg-info text-white">
               Venue List
               <span class="px-1 font-italic" id="venueListName"></span>
+              <span>
+                <button
+                  class="btn btn-warning"
+                  type="button"
+                  data-toggle="collapse"
+                  data-target="#venuesList"
+                  aria-expanded="false"
+                  aria-controls="venueList"
+                  id="showVenueList"
+                >
+                  <i
+                    class="fas fa-chevron-up"
+                    aria-hidden="true"
+                    id="showVenueListIcon"
+                  ></i>
+                </button>
+              </span>
             </h3>
             <div class="container-fluid card card-body">
-              <div class="table-responsive-md" id="venuesList">
+              <div class="table-responsive-md collapse" id="venuesList">
                 <!-- Venue Information -->
               </div>
             </div>
