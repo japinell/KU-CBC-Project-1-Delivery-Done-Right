@@ -35,14 +35,15 @@ const credentials = {
 
 // Elements
 const topDiv = $("#map");
-const bottomDiv = $("#bottomDiv");
+
 const inputDiv = $("#inputDiv");
 const buttonDiv = $("#results");
+const brandedDiv = $("#branded");
 const searchButton = $("#searchButton");
 const venueListName = $("#venueListName");
 //
 const venuesList = $("#venuesList");
-const restaurantSelection = $("#restaurantSelection");
+const nutritionInformation = $("#nutritionInformation");
 
 //
 
@@ -96,7 +97,25 @@ var venuesObj = {
   venueDeliveryProviderName: "",
   venueIcon: "",
 };
-
+var brandedObj = {
+  restaurantName: "",
+  restaurantItemName: "",
+  foodName: "",
+  foodCalories: "",
+  nixItemId: "",
+  photoEl: "",
+  servingSize: "",
+  servingUnit: "",
+  brandedFoods: [],
+};
+var commonObj = {
+  foodName: "",
+  foodCalories: "",
+  nixItemId: "",
+  photoEl: "",
+  servingSize: "",
+  servingUnit: "",
+};
 var search = {
   postalCode: "",
   cityName: "",
@@ -218,7 +237,7 @@ function renderMap() {
     data: {
       ll: zip[0].lat + "," + zip[0].lon,
       distance: "5km",
-      limit: 20,
+      limit: 50,
     },
   })
     .then(function (response) {
@@ -238,17 +257,61 @@ function renderMap() {
           branded: true,
           self: false,
           common: true,
+          common_restaurant: true,
+          detailed: true,
+          claims: true,
           brand_ids: JSON.stringify(brand_ids),
         },
       });
     })
-    .then(function (response) {
-      console.log(response);
+    .then(function (data) {
+      console.log(data);
+      var restaurants = [];
+      for (var i = 0, l = data.branded.length; i < l; i++) {
+        brandedObj = {
+          restaurantName: "",
+          restaurantItemName: "",
+          foodName: "",
+          foodCalories: "",
+          nixItemId: "",
+          photoEl: "",
+          servingSize: "",
+          servingUnit: "",
+        };
+        brandedObj.restaurantName = data.branded[i].brand_name;
+        brandedObj.restaurantItemName = data.branded[i].brand_name_item_name;
+        brandedObj.foodName = data.branded[i].food_name;
+        brandedObj.foodCalories = data.branded[i].nf_calories;
+        brandedObj.nixItemId = data.branded[i].nix_item_id;
+        brandedObj.photoEl = data.branded[i].photo.thumb;
+        brandedObj.servingSize = data.branded[i].serving_qty;
+        brandedObj.servingUnit = data.branded[i].serving_unit;
+
+        restaurants.push(brandedObj);
+      }
+      renderBrandedNutrition(restaurants);
+      // for (var i = 0, l = data.common.length; i < l; i++) {
+      //   commonObj = {
+      //     foodName: "",
+      //     foodCalories: "",
+      //     nixItemId: "",
+      //     photoEl: "",
+      //     servingSize: "",
+      //     servingUnit: "",
+      //   };
+      //   commonObj.foodName = data.common[i].food_name;
+      //   commonObj.photoEl = data.common[i].photo.thumb;
+      //   commonObj.servingSize = data.common[i].serving_qty;
+      //   commonObj.servingUnit = data.common[i].serving_unit;
+      //   renderCommonNutrition(commonObj);
+      // }
     })
     .catch(function (response) {
       console.error(response);
-      $("#Results").html().response;
+      $("#nutritionInformation").html().response;
     });
+  // End of Nutrition API Call
+  //
   getDeliveryInformation(
     search.cityName + "," + search.state,
     search.radius,
@@ -307,7 +370,134 @@ function callback(results, status) {
   }
   //
 }
+function renderBrandedNutrition(restaurants) {
+  console.log("Found Branded Restaurants-----------", restaurants);
+  var tableEl2,
+    tableHeaderEl2,
+    tableBodyEl2,
+    tableRowEl2,
+    tableColEl2,
+    tableImgEl2,
+    tableButtonEl2;
 
+  nutritionInformation.empty();
+  tableEl2 = $("<table>");
+  tableEl2.addClass("table table-hover");
+
+  //
+
+  //
+  tableHeaderEl2 = $("<thead>");
+  tableRowEl2 = $("<tr>");
+  //
+  // #
+  //
+  tableColEl2 = $("<th>");
+  tableColEl2.attr("scope", "col");
+  tableColEl2.addClass("text-center");
+  tableColEl2.text("#");
+  tableColEl2.appendTo(tableRowEl2);
+  //
+  // Icon
+  //
+  tableColEl2 = $("<th>");
+  tableColEl2.attr("scope", "col");
+  // tableColEl2.addClass("col-1");
+  tableColEl2.text("Photo");
+  tableColEl2.appendTo(tableRowEl2);
+  //
+  // Name
+  //
+  tableColEl2 = $("<th>");
+  tableColEl2.attr("scope", "col");
+  // tableColEl2.addClass("col-4");
+  tableColEl2.text("Venue Name");
+  tableColEl2.appendTo(tableRowEl2);
+  //
+  // Category
+  //
+  tableColEl2 = $("<th>");
+  tableColEl2.attr("scope", "col");
+  // tableColEl2.addClass("col-2");
+  tableColEl2.text("Food Item");
+  tableColEl2.appendTo(tableRowEl2);
+  //
+  // Address
+  //
+  tableColEl2 = $("<th>");
+  tableColEl2.attr("scope", "col");
+  // tableColEl2.addClass("col-2");
+  tableColEl2.text("Calories (serving size)");
+  tableColEl2.appendTo(tableRowEl2);
+  //
+  tableRowEl2.appendTo(tableHeaderEl2);
+  //
+  tableHeaderEl2.appendTo(tableEl2);
+  //
+  tableBodyEl2 = $("<tbody>");
+  for (var i = 0, l = restaurants.length; i < l; i++) {
+    //
+    tableRowEl2 = $("<tr>");
+    //
+    tableColEl2 = $("<th>");
+    tableColEl2 = $("<td>");
+    tableColEl2.attr("scope", "row");
+    tableColEl2.addClass("py-4 text-right");
+    tableColEl2.text(i + 1);
+    tableColEl2.appendTo(tableRowEl2);
+    //
+    tableColEl2 = $("<th>");
+    tableButtonEl2 = $("<button>");
+    tableButtonEl2.addClass("btn btn-success nutritionbtn"); //
+    tableImgEl2 = $("<img>");
+    tableImgEl2.attr("src", restaurants[i].photoEl);
+    tableImgEl2.addClass("bg-success nutritionimg");
+    tableImgEl2.appendTo(tableButtonEl2);
+    //
+    tableButtonEl2.appendTo(tableColEl2);
+    tableColEl2.appendTo(tableRowEl2);
+    tableColEl2.addClass("py-2");
+    //
+    //
+    tableColEl2 = $("<th>");
+    tableColEl2 = $("<td>");
+    tableColEl2.addClass("py-4");
+    tableColEl2.text(restaurants[i].restaurantName);
+    tableColEl2.appendTo(tableRowEl2);
+    //
+    tableColEl2 = $("<th>");
+    tableColEl2 = $("<td>");
+    tableColEl2.addClass("py-4");
+    tableColEl2.text(restaurants[i].foodName);
+    tableColEl2.appendTo(tableRowEl2);
+    //
+    tableColEl2 = $("<th>");
+    tableColEl2 = $("<td>");
+    tableColEl2.addClass("py-4");
+    tableColEl2.text(
+      restaurants[i].foodCalories +
+        " Cal. per serving " +
+        "(" +
+        restaurants[i].servingSize +
+        " " +
+        restaurants[i].servingUnit +
+        ")"
+    );
+    tableColEl2.appendTo(tableRowEl2);
+    //
+    tableRowEl2.appendTo(tableBodyEl2);
+    //
+
+    //
+  }
+  //
+  tableBodyEl2.appendTo(tableEl2);
+  //
+  tableEl2.appendTo(nutritionInformation);
+}
+function renderCommonNutrition(commonObj) {
+  console.log(commonObj);
+}
 // Create infoWindow
 function createMarker(place) {
   //
@@ -657,10 +847,6 @@ venuesList.on("click", "button", renderVenueInformation);
 
 // Rock & Roll
 //getDeliveryInformation();
-function getApi() {
-  //
-  //
-}
 
 //$("#exampleModalCenter").modal({ show: false });
 
