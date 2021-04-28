@@ -259,7 +259,7 @@ function renderMap() {
     contentType: "application/json",
     data: {
       ll: zip[0].lat + "," + zip[0].lon,
-      distance: "5km",
+      distance: search.radius + "m",
       limit: 50,
     },
     //
@@ -269,8 +269,38 @@ function renderMap() {
       var brand_ids = response.locations.map(function (location) {
         return location.brand_id;
       });
-      //
-      //console.log(response);
+
+      console.log(response);
+      var locations = [];
+      var locationsObj = {};
+      for (var i = 0, l = response.locations.length; i < l; i++) {
+        locationsObj = {
+          restaurantName: "",
+          restaurantAddress: "",
+          restaurantCity: "",
+          restaurantState: "",
+          restaurantZip: "",
+          restaurantLat: "",
+          restaurantLng: "",
+          distanceAway: "",
+          phoneNumber: "",
+          nixBrandId: "",
+        };
+        locationsObj.restaurantName = response.locations[i].name;
+        locationsObj.restaurantAddress = response.locations[i].address;
+        locationsObj.restaurantCity = response.locations[i].city;
+        locationsObj.restaurantState = response.locations[i].state;
+        locationsObj.restaurantZip = response.locations[i].zip;
+        locationsObj.restaurantLat = response.locations[i].lat;
+        locationsObj.restaurantLng = response.locations[i].lng;
+        locationsObj.distanceAway = response.locations[i].distance_km;
+        locationsObj.phoneNumber = response.locations[i].phone;
+        locationsObj.nixBrandId = response.locations[i].brand_id;
+
+        locations.push(locationsObj);
+      }
+
+      console.log("Locations Info:", locations);
       return $.ajax({
         url: NUTRITIONIX_API_SERVER + NUTRITIONIX_INSTANT_API, // "https://trackapi.nutritionix.com/v2/search/instant",
         headers: {
@@ -287,6 +317,7 @@ function renderMap() {
           common_restaurant: true,
           detailed: true,
           claims: true,
+          branded_food_name_only: true,
           brand_ids: JSON.stringify(brand_ids),
         },
       });
@@ -301,10 +332,12 @@ function renderMap() {
         //
         brandedObj = {
           restaurantName: "",
+          restaurantAddress: "",
           restaurantItemName: "",
           foodName: "",
           foodCalories: "",
           nixItemId: "",
+          nixBrandId: "",
           photoEl: "",
           servingSize: "",
           servingUnit: "",
@@ -315,6 +348,7 @@ function renderMap() {
         brandedObj.foodName = data.branded[i].food_name;
         brandedObj.foodCalories = data.branded[i].nf_calories;
         brandedObj.nixItemId = data.branded[i].nix_item_id;
+        brandedObj.nixBrandId = data.branded[i].nix_brand_id;
         brandedObj.photoEl = data.branded[i].photo.thumb;
         brandedObj.servingSize = data.branded[i].serving_qty;
         brandedObj.servingUnit = data.branded[i].serving_unit;
@@ -322,24 +356,25 @@ function renderMap() {
         restaurants.push(brandedObj);
         //
       }
-      //
-      renderBrandedNutrition(restaurants);
-      //
-      // for (var i = 0, l = data.common.length; i < l; i++) {
-      //   commonObj = {
-      //     foodName: "",
-      //     foodCalories: "",
-      //     nixItemId: "",
-      //     photoEl: "",
-      //     servingSize: "",
-      //     servingUnit: "",
-      //   };
-      //   commonObj.foodName = data.common[i].food_name;
-      //   commonObj.photoEl = data.common[i].photo.thumb;
-      //   commonObj.servingSize = data.common[i].serving_qty;
-      //   commonObj.servingUnit = data.common[i].serving_unit;
-      //   renderCommonNutrition(commonObj);
-      // }
+
+      var commonFoods = [];
+      for (var i = 0, l = data.common.length; i < l; i++) {
+        commonObj = {
+          foodName: "",
+          foodCalories: "",
+          nixItemId: "",
+          photoEl: "",
+          servingSize: "",
+          servingUnit: "",
+        };
+        commonObj.foodName = data.common[i].food_name;
+        commonObj.photoEl = data.common[i].photo.thumb;
+        commonObj.servingSize = data.common[i].serving_qty;
+        commonObj.servingUnit = data.common[i].serving_unit;
+
+        commonFoods.push(commonObj);
+      }
+      renderBrandedNutrition(restaurants, commonFoods);
     })
     .catch(function (response) {
       //
@@ -348,6 +383,7 @@ function renderMap() {
       //
     });
   //
+
   getDeliveryInformation(
     //
     search.cityName + "," + search.state,
@@ -363,11 +399,10 @@ function renderMap() {
   //
   var request = {
     location: city,
-    radius: rad, // meters
+    radius: search.radius, // meters
     keyword: search.query,
     type: ["restaurant"],
     // name: "Wendy's",
-    openNow: true,
     fields: [
       "name",
       /*"business_status",
@@ -396,11 +431,13 @@ function renderMap() {
 // Create markers for each place
 //
 function callback(results, status) {
+  console.log(results);
   //
   if (status == google.maps.places.PlacesServiceStatus.OK) {
     //
     for (var i = 0; i < results.length; i++) {
       //
+
       createMarker(results[i]);
       //console.log(results[i]);
       //
@@ -409,12 +446,9 @@ function callback(results, status) {
   }
   //
 }
-//
-// Render nutrition information
-//
-function renderBrandedNutrition(restaurants) {
-  //
-  //console.log("Found Branded Restaurants-----------", restaurants);
+function renderBrandedNutrition(restaurants, commonFoods) {
+  console.log("Found Branded Restaurants-----------", restaurants);
+  console.log("Found Common Foods-----", commonFoods);
   var tableEl2,
     tableHeaderEl2,
     tableBodyEl2,
@@ -492,7 +526,7 @@ function renderBrandedNutrition(restaurants) {
     tableButtonEl2 = $("<button>");
     tableButtonEl2.addClass("btn btn-success nutritionbtn"); //
     tableImgEl2 = $("<img>");
-    tableImgEl2.attr("src", restaurants[i].photoEl);
+    tableImgEl2.attr("src", commonFoods[i].photoEl);
     tableImgEl2.addClass("bg-success nutritionimg");
     tableImgEl2.appendTo(tableButtonEl2);
     //
@@ -535,11 +569,6 @@ function renderBrandedNutrition(restaurants) {
   tableEl2.appendTo(nutritionInformation);
   //
 }
-function renderCommonNutrition(commonObj) {
-  //
-  //console.log(commonObj);
-}
-//
 // Create infoWindow
 //
 function createMarker(place) {
@@ -555,7 +584,17 @@ function createMarker(place) {
   google.maps.event.addListener(marker, "click", () => {
     //
     infowindow = new google.maps.InfoWindow({
-      content: place.name,
+      content:
+        "<img src=" +
+        place.icon +
+        ">" +
+        "<br>" +
+        "<b>" +
+        place.name +
+        ": " +
+        "</b>" +
+        "<br>" +
+        place.vicinity,
     });
     //
     infowindow.open(map, marker);
