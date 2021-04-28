@@ -1,41 +1,54 @@
+//
 // Nutritionix API
+//
 const NUT_API_SERVER = "https://api.nutritionix.com";
 const NUT_API_END_POINT = "/v1-1/search";
 const NUT_API_KEY = "dcb0f2394e224dd571c331c9f7960d2a";
 const NUT_API_ID = "3a3f663b";
-
+//
 // Open Weather Map API
+//
 const OWEATHER_API_SERVER = "https://api.openweathermap.org";
 const OWEATHER_API_WEATHER = "/data/2.5/weather";
 const OWEATHER_API_ZIP = "/geo/1.0/zip";
 const OWEATHER_API_REV = "/geo/1.0/reverse";
 const OWEATHER_API_KEY = "9dc0ecf3100ca1f98d7b3462ccb6b3df";
-
+//
 // Foursquare API
+//
 const FOURSQUARE_API_SERVER = "https://api.foursquare.com";
 const FOURSQUARE_SEARCH_API = "/v2/venues/search";
 const FOURSQUARE_CLIENT_ID = "VT3I5R4QZ1YUEHNVHGUKIW1ARP1GWIRBCR4WIJ1JF2TBEY3O";
 const FOURSQUARE_CLIENT_SECRET =
   "5P0PFJJHDH2SMT3HFOQ2EKZXODJPBNQCQTSA4MYV1PM5UW34";
-
+//
 // Yelp API
+//
 const YELP_API_SERVER = "https://api.yelp.com";
 const YELP_SEARCH_API = "/v3/businesses/search";
 const YELP_API_KEY =
   "8jWJ9apB_OyS-ZUbLamBcg-z73aohgWKVXJD9YO1dk_k4zUomzLlhg5ys8WsinIBcNvUq_bv2IE6sciYZN1EyIQmeuSMDGWOFFvEuna481l4r4gQT7Y3pL3Q9k2EYHYx";
-
+//
 // Google API
+//
 const CLIENT_ID = "0VET4EDLZ1PWXH3DJ5EPT2IPRJHAWAYHPHFB2PLJQEQDCJNV";
 const CLIENT_SECRET = "BANDE4Y5UCVVVFXYIAGZJVFA0JLMPRMIBAMK2G4ECFYAWJL0";
 //
+// Nutritionix API
+//
+const NUTRITIONIX_API_SERVER = "https://trackapi.nutritionix.com";
+const NUTRITIONIX_LOCATIONS_API = "/v2/locations";
+const NUTRITIONIX_INSTANT_API = "/v2/search/instant";
+const NUTRITIONIX_APP_ID = "3a3f663b";
+const NUTRITIONIX_APP_KEY = "dcb0f2394e224dd571c331c9f7960d2a";
 const credentials = {
   "x-app-id": "3a3f663b",
   "x-app-key": "dcb0f2394e224dd571c331c9f7960d2a",
 };
-
+//
 // Elements
+//
 const topDiv = $("#map");
-
 const inputDiv = $("#inputDiv");
 const buttonDiv = $("#results");
 const brandedDiv = $("#branded");
@@ -43,27 +56,25 @@ const searchButton = $("#searchButton");
 const venueListName = $("#venueListName");
 //
 const venuesList = $("#venuesList");
+const venueInformation = $("#venueInformation");
 const nutritionInformation = $("#nutritionInformation");
-
 //
-
-var center = {};
-
+// Variables
+//
 var queryInput = $("#description").val().trim();
-
 var zipCodeInput = $("#zipcode").val().trim();
 var radiusInput = $("#radius").val().trim();
-
+//
 var city;
 var map;
 var service;
 var infowindow;
-
+var center = {};
 var coordinates = {
   lat: 0.0,
   lng: 0.0,
 };
-
+//
 var postalCode = {
   code: "",
   name: "",
@@ -71,8 +82,9 @@ var postalCode = {
   lng: "",
   country: "",
 };
-
-// Variables
+//
+// Object variables
+//
 var cityObj = {
   cityName: "",
   cityDisplayName: "",
@@ -82,7 +94,7 @@ var cityObj = {
   cityVenueCategoryShortName: "",
   cityVenues: [],
 };
-
+//
 var venuesObj = {
   venueId: "",
   venueName: "",
@@ -97,6 +109,7 @@ var venuesObj = {
   venueDeliveryProviderName: "",
   venueIcon: "",
 };
+//
 var brandedObj = {
   restaurantName: "",
   restaurantItemName: "",
@@ -108,6 +121,7 @@ var brandedObj = {
   servingUnit: "",
   brandedFoods: [],
 };
+//
 var commonObj = {
   foodName: "",
   foodCalories: "",
@@ -116,6 +130,7 @@ var commonObj = {
   servingSize: "",
   servingUnit: "",
 };
+//
 var search = {
   postalCode: "",
   cityName: "",
@@ -124,8 +139,9 @@ var search = {
   foodType: "",
   query: "",
 };
-
+//
 // Show message
+//
 function showMessage(message) {
   //
   console.log(message);
@@ -135,8 +151,9 @@ function showMessage(message) {
   });
   //
 }
-
+//
 // Get location by postal code
+//
 function getLocationByPostalCode(postal) {
   //
   var apiURL = OWEATHER_API_SERVER + OWEATHER_API_ZIP;
@@ -150,8 +167,9 @@ function getLocationByPostalCode(postal) {
   return JSON.parse(xhr.response);
   //
 }
-
+//
 // Get location by coordinates
+//
 function getLocationByCoordinates(lat, lng) {
   //
   var apiURL = OWEATHER_API_SERVER + OWEATHER_API_REV;
@@ -167,7 +185,8 @@ function getLocationByCoordinates(lat, lng) {
   return JSON.parse(xhr.response);
   //
 }
-
+//
+// Initialize Google map
 //
 function initMap() {
   //
@@ -189,7 +208,8 @@ function initMap() {
   }
   //
 }
-
+//
+// Render Google map
 //
 function renderMap() {
   //
@@ -199,7 +219,6 @@ function renderMap() {
   radiusInput = $("#radius").val().trim();
   queryInput = $("#description").val().trim();
   //
-
   if (zipCodeInput === "") {
     //
     zip = getLocationByCoordinates(coordinates.lat, coordinates.lng);
@@ -226,12 +245,16 @@ function renderMap() {
   qry = queryInput === "" ? "" : queryInput;
   //
   search.radius = rad;
-
   search.query = qry;
+  //
   //Nutrition API Call
+  //
   $.ajax({
-    url: "https://trackapi.nutritionix.com/v2/locations",
-    headers: credentials,
+    url: NUTRITIONIX_API_SERVER + NUTRITIONIX_LOCATIONS_API, // "https://trackapi.nutritionix.com/v2/locations",
+    headers: {
+      "x-app-id": NUTRITIONIX_APP_ID,
+      "x-app-key": NUTRITIONIX_APP_KEY,
+    }, // credentials,
     method: "GET",
     contentType: "application/json",
     data: {
@@ -239,21 +262,25 @@ function renderMap() {
       distance: "5km",
       limit: 50,
     },
+    //
   })
     .then(function (response) {
+      //
       var brand_ids = response.locations.map(function (location) {
         return location.brand_id;
       });
-
-      console.log(response);
-
+      //
+      //console.log(response);
       return $.ajax({
-        url: "https://trackapi.nutritionix.com/v2/search/instant",
-        headers: credentials,
+        url: NUTRITIONIX_API_SERVER + NUTRITIONIX_INSTANT_API, // "https://trackapi.nutritionix.com/v2/search/instant",
+        headers: {
+          "x-app-id": NUTRITIONIX_APP_ID,
+          "x-app-key": NUTRITIONIX_APP_KEY,
+        }, // credentials,
         method: "GET",
         contentType: "application/json",
         data: {
-          query: queryInput || "salad",
+          query: queryInput || "salad", // default
           branded: true,
           self: false,
           common: true,
@@ -263,11 +290,15 @@ function renderMap() {
           brand_ids: JSON.stringify(brand_ids),
         },
       });
+      //
     })
     .then(function (data) {
-      console.log(data);
+      //
+      //console.log(data);
       var restaurants = [];
+      //
       for (var i = 0, l = data.branded.length; i < l; i++) {
+        //
         brandedObj = {
           restaurantName: "",
           restaurantItemName: "",
@@ -278,6 +309,7 @@ function renderMap() {
           servingSize: "",
           servingUnit: "",
         };
+        //
         brandedObj.restaurantName = data.branded[i].brand_name;
         brandedObj.restaurantItemName = data.branded[i].brand_name_item_name;
         brandedObj.foodName = data.branded[i].food_name;
@@ -286,10 +318,13 @@ function renderMap() {
         brandedObj.photoEl = data.branded[i].photo.thumb;
         brandedObj.servingSize = data.branded[i].serving_qty;
         brandedObj.servingUnit = data.branded[i].serving_unit;
-
+        //
         restaurants.push(brandedObj);
+        //
       }
+      //
       renderBrandedNutrition(restaurants);
+      //
       // for (var i = 0, l = data.common.length; i < l; i++) {
       //   commonObj = {
       //     foodName: "",
@@ -307,15 +342,18 @@ function renderMap() {
       // }
     })
     .catch(function (response) {
-      console.error(response);
+      //
+      //console.error(response);
       $("#nutritionInformation").html().response;
+      //
     });
-  // End of Nutrition API Call
   //
   getDeliveryInformation(
+    //
     search.cityName + "," + search.state,
     search.radius,
     search.query
+    //
   );
   //
   map = new google.maps.Map(document.getElementById("map"), {
@@ -354,8 +392,9 @@ function renderMap() {
   service.nearbySearch(request, callback);
   //
 }
-
+//
 // Create markers for each place
+//
 function callback(results, status) {
   //
   if (status == google.maps.places.PlacesServiceStatus.OK) {
@@ -370,8 +409,12 @@ function callback(results, status) {
   }
   //
 }
+//
+// Render nutrition information
+//
 function renderBrandedNutrition(restaurants) {
-  console.log("Found Branded Restaurants-----------", restaurants);
+  //
+  //console.log("Found Branded Restaurants-----------", restaurants);
   var tableEl2,
     tableHeaderEl2,
     tableBodyEl2,
@@ -379,13 +422,11 @@ function renderBrandedNutrition(restaurants) {
     tableColEl2,
     tableImgEl2,
     tableButtonEl2;
-
+  //
   nutritionInformation.empty();
+  //
   tableEl2 = $("<table>");
   tableEl2.addClass("table table-hover");
-
-  //
-
   //
   tableHeaderEl2 = $("<thead>");
   tableRowEl2 = $("<tr>");
@@ -403,7 +444,7 @@ function renderBrandedNutrition(restaurants) {
   tableColEl2 = $("<th>");
   tableColEl2.attr("scope", "col");
   // tableColEl2.addClass("col-1");
-  tableColEl2.text("Photo");
+  tableColEl2.text("");
   tableColEl2.appendTo(tableRowEl2);
   //
   // Name
@@ -414,15 +455,15 @@ function renderBrandedNutrition(restaurants) {
   tableColEl2.text("Venue Name");
   tableColEl2.appendTo(tableRowEl2);
   //
-  // Category
+  // Food type
   //
   tableColEl2 = $("<th>");
   tableColEl2.attr("scope", "col");
   // tableColEl2.addClass("col-2");
-  tableColEl2.text("Food Item");
+  tableColEl2.text("Food Type");
   tableColEl2.appendTo(tableRowEl2);
   //
-  // Address
+  // Calories
   //
   tableColEl2 = $("<th>");
   tableColEl2.attr("scope", "col");
@@ -435,6 +476,7 @@ function renderBrandedNutrition(restaurants) {
   tableHeaderEl2.appendTo(tableEl2);
   //
   tableBodyEl2 = $("<tbody>");
+  //
   for (var i = 0, l = restaurants.length; i < l; i++) {
     //
     tableRowEl2 = $("<tr>");
@@ -457,7 +499,6 @@ function renderBrandedNutrition(restaurants) {
     tableButtonEl2.appendTo(tableColEl2);
     tableColEl2.appendTo(tableRowEl2);
     tableColEl2.addClass("py-2");
-    //
     //
     tableColEl2 = $("<th>");
     tableColEl2 = $("<td>");
@@ -487,27 +528,29 @@ function renderBrandedNutrition(restaurants) {
     //
     tableRowEl2.appendTo(tableBodyEl2);
     //
-
-    //
   }
   //
   tableBodyEl2.appendTo(tableEl2);
   //
   tableEl2.appendTo(nutritionInformation);
+  //
 }
 function renderCommonNutrition(commonObj) {
-  console.log(commonObj);
+  //
+  //console.log(commonObj);
 }
+//
 // Create infoWindow
+//
 function createMarker(place) {
   //
   if (!place.geometry || !place.geometry.location) return;
+  //
   const marker = new google.maps.Marker({
     map: map,
     position: place.geometry.location,
     title: place.name,
   });
-
   //
   google.maps.event.addListener(marker, "click", () => {
     //
@@ -520,8 +563,9 @@ function createMarker(place) {
   });
   //
 }
-
+//
 // Get delivery information
+//
 function getDeliveryInformation(city, radius, query) {
   //
   var apiURL = FOURSQUARE_API_SERVER + FOURSQUARE_SEARCH_API;
@@ -552,7 +596,7 @@ function getDeliveryInformation(city, radius, query) {
     })
     .then(function (data) {
       //
-      console.log(data);
+      // console.log(data);
       //
       if (data.response.venues.length > 0) {
         //
@@ -678,8 +722,9 @@ function getDeliveryInformation(city, radius, query) {
     });
   //
 }
-
+//
 // Render delivery information
+//
 function renderDeliveryInformation() {
   //
   var tableEl,
@@ -821,35 +866,51 @@ function renderDeliveryInformation() {
   tableEl.appendTo(venuesList);
   //
 }
-
+//
 // Render venue information
+//
 function renderVenueInformation() {
   //
   $("#venueName").text($(this).attr("name"));
-  $("#cityVenueCategoryName").text($(this).attr("category"));
+  $("#venueCategory").text($(this).attr("category"));
   $("#venueAddress").text($(this).attr("address"));
   $("#venueDeliveryYN").text($(this).attr("delivery"));
   $("#venueDeliveryNoContact").text($(this).attr("contact"));
   //
 }
-
+//
 // Get city venue by selection
+//
 function getCityVenueBySelection() {
   //
-  console.log($(this));
+  //console.log($(this));
+  $("#showVenueInformation").trigger("click");
   //
 }
-
+//
 // Event listeners
-// venuesList.on("click", "button", getCityVenueBySelection);
+venuesList.on("click", "button", getCityVenueBySelection);
 searchButton.on("click", renderMap);
 venuesList.on("click", "button", renderVenueInformation);
 
 // Rock & Roll
 //getDeliveryInformation();
-
-//$("#exampleModalCenter").modal({ show: false });
-
-$("#showModal").click(function () {
-  $("#exampleModalCenter").modal({ show: true });
+//
+$("#showVenueInformation").hide();
+$("#venuesList").collapse({ show: true });
+$("#showVenueList").on("click", function () {
+  //
+  if ($(this).hasClass("collapsed") || $(this).hasClass("collapsing")) {
+    //
+    $(this).children().removeClass("fa-chevron-down");
+    $(this).children().addClass("fa-chevron-up");
+    //
+  } else {
+    //
+    $(this).children().removeClass("fa-chevron-up");
+    $(this).children().addClass("fa-chevron-down");
+    //
+  }
+  //
 });
+//
