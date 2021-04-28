@@ -872,7 +872,7 @@ function renderDeliveryInformation() {
 function renderVenueInformation() {
   //
   $("#venueName").text($(this).attr("name"));
-  $("#cityVenueCategoryName").text($(this).attr("category"));
+  $("#venueCategory").text($(this).attr("category"));
   $("#venueAddress").text($(this).attr("address"));
   $("#venueDeliveryYN").text($(this).attr("delivery"));
   $("#venueDeliveryNoContact").text($(this).attr("contact"));
