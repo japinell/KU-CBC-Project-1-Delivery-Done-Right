@@ -53,7 +53,9 @@ const inputDiv = $("#inputDiv");
 const buttonDiv = $("#results");
 const brandedDiv = $("#branded");
 const searchButton = $("#searchButton");
+const clearButton = $("#clearButton");
 const venueListName = $("#venueListName");
+const recentSearch = $("#recentSearch");
 //
 const venuesList = $("#venuesList");
 const venueInformation = $("#venueInformation");
@@ -61,6 +63,7 @@ const nutritionInformation = $("#nutritionInformation");
 //
 // Variables
 //
+var storedSearch = JSON.parse(localStorage.getItem("search")) || [];
 var queryInput = $("#description").val().trim();
 var zipCodeInput = $("#zipcode").val().trim();
 var radiusInput = $("#radius").val().trim();
@@ -207,6 +210,7 @@ function initMap() {
     //
   }
   //
+  renderButtons();
 }
 //
 // Render Google map
@@ -218,6 +222,7 @@ function renderMap() {
   zipCodeInput = $("#zipcode").val().trim();
   radiusInput = $("#radius").val().trim();
   queryInput = $("#description").val().trim();
+
   //
   if (zipCodeInput === "") {
     //
@@ -932,6 +937,7 @@ function getCityVenueBySelection() {
 // Event listeners
 venuesList.on("click", "button", getCityVenueBySelection);
 searchButton.on("click", renderMap);
+searchButton.on("click", renderButtons);
 venuesList.on("click", "button", renderVenueInformation);
 
 // Rock & Roll
@@ -971,3 +977,68 @@ $("#nutritionInfo").on("click", function () {
   //
 });
 //
+var storedSearches = JSON.parse(localStorage.getItem("search")) || [];
+
+var search = [];
+var NUMBER_OF_SEARCHES = search.length;
+
+function renderButtons() {
+  queryInput = $("#description").val().trim();
+  addSearch(queryInput);
+  //
+  var topic;
+  var rowEl, colEl, btnEl;
+  //
+  recentSearch.empty();
+
+  var CombinedSearch = [];
+  CombinedSearch.push(...search);
+  CombinedSearch.push(...storedSearches);
+
+  //
+  rowEl = $("<div>");
+  // rowEl.addClass("row row-custom");
+  rowEl.addClass("row-cols-auto p-10 m-10");
+  rowEl.attr("id", "search");
+  //
+  for (var i = 0; i < CombinedSearch.length; i++) {
+    //
+    topic = CombinedSearch[i];
+    //
+    colEl = $("<div>");
+    // colEl.addClass
+    colEl.addClass("col-6 p-1");
+    //
+    pEl = $("<p>");
+    pEl.text(topic);
+    pEl.attr("id", topic);
+    pEl.appendTo(colEl);
+    //
+    colEl.appendTo(rowEl);
+    //
+  }
+  //
+
+  rowEl.appendTo(recentSearch);
+  //
+}
+// Adds Buttons to the list
+function addSearch(searchFood) {
+  //
+  if (!(search.indexOf(searchFood) >= 0)) {
+    //
+    // Insert it
+    storedSearches.unshift(searchFood);
+    NUMBER_OF_SEARCHES = search.length;
+    //
+    localStorage.setItem("search", JSON.stringify(storedSearches));
+  }
+  //
+}
+
+function clearStorage() {
+  recentSearch.empty();
+  localStorage.clear();
+  window.location.reload();
+}
+clearButton.on("click", clearStorage);

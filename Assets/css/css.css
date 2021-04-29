@@ -25,7 +25,7 @@ button:hover {
 
 #banner {
   background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
-    url(/Assets/images/banner-772x250.png);
+    url(/projects/KU-CBC-Project-1-Delivery-Done-Right/Assets/images/banner.png);
 }
 
 h1 {
@@ -79,5 +79,8 @@ footer {
   width: 90px;
 }
 footer h2 {
+  font-size: 20px;
+}
+h3 {
   font-size: 20px;
 }
