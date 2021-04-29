@@ -983,7 +983,7 @@ var search = [];
 var NUMBER_OF_SEARCHES = search.length;
 
 function renderButtons() {
-  queryInput = $("#description").val().trim();
+  if (queryInput !== "") queryInput = $("#description").val().trim();
   addSearch(queryInput);
   //
   var topic;
@@ -1012,6 +1012,7 @@ function renderButtons() {
     pEl = $("<p>");
     pEl.text(topic);
     pEl.attr("id", topic);
+    pEl.addClass("font-weight-bold searchHistory");
     pEl.appendTo(colEl);
     //
     colEl.appendTo(rowEl);
