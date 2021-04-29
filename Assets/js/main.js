@@ -270,7 +270,6 @@ function renderMap() {
         return location.brand_id;
       });
 
-      console.log(response);
       var locations = [];
       var locationsObj = {};
       for (var i = 0, l = response.locations.length; i < l; i++) {
@@ -300,7 +299,6 @@ function renderMap() {
         locations.push(locationsObj);
       }
 
-      console.log("Locations Info:", locations);
       return $.ajax({
         url: NUTRITIONIX_API_SERVER + NUTRITIONIX_INSTANT_API, // "https://trackapi.nutritionix.com/v2/search/instant",
         headers: {
@@ -334,6 +332,8 @@ function renderMap() {
           restaurantName: "",
           restaurantAddress: "",
           restaurantItemName: "",
+          fullNutrients: "",
+          claims: "",
           foodName: "",
           foodCalories: "",
           nixItemId: "",
@@ -341,10 +341,13 @@ function renderMap() {
           photoEl: "",
           servingSize: "",
           servingUnit: "",
+          servingWeightGrams: "",
         };
         //
         brandedObj.restaurantName = data.branded[i].brand_name;
         brandedObj.restaurantItemName = data.branded[i].brand_name_item_name;
+        brandedObj.fullNutrients = data.branded[i].full_nutrients;
+        brandedObj.claims = data.branded[i].claims;
         brandedObj.foodName = data.branded[i].food_name;
         brandedObj.foodCalories = data.branded[i].nf_calories;
         brandedObj.nixItemId = data.branded[i].nix_item_id;
@@ -352,6 +355,7 @@ function renderMap() {
         brandedObj.photoEl = data.branded[i].photo.thumb;
         brandedObj.servingSize = data.branded[i].serving_qty;
         brandedObj.servingUnit = data.branded[i].serving_unit;
+        brandedObj.servingWeightGrams = data.branded[i].serving_weight_grams;
         //
         restaurants.push(brandedObj);
         //
@@ -431,7 +435,6 @@ function renderMap() {
 // Create markers for each place
 //
 function callback(results, status) {
-  console.log(results);
   //
   if (status == google.maps.places.PlacesServiceStatus.OK) {
     //
@@ -439,7 +442,7 @@ function callback(results, status) {
       //
 
       createMarker(results[i]);
-      //console.log(results[i]);
+
       //
     }
     //
@@ -532,7 +535,6 @@ function renderBrandedNutrition(restaurants, commonFoods) {
     //
     tableButtonEl2.appendTo(tableColEl2);
     tableColEl2.appendTo(tableRowEl2);
-    tableColEl2.addClass("py-2");
     //
     tableColEl2 = $("<th>");
     tableColEl2 = $("<td>");
@@ -635,7 +637,7 @@ function getDeliveryInformation(city, radius, query) {
     })
     .then(function (data) {
       //
-      // console.log(data);
+
       //
       if (data.response.venues.length > 0) {
         //
@@ -937,7 +939,23 @@ venuesList.on("click", "button", renderVenueInformation);
 //
 $("#showVenueInformation").hide();
 $("#venuesList").collapse({ show: true });
+$("#nutritionInformation").collapse({ show: true });
 $("#showVenueList").on("click", function () {
+  //
+  if ($(this).hasClass("collapsed") || $(this).hasClass("collapsing")) {
+    //
+    $(this).children().removeClass("fa-chevron-down");
+    $(this).children().addClass("fa-chevron-up");
+    //
+  } else {
+    //
+    $(this).children().removeClass("fa-chevron-up");
+    $(this).children().addClass("fa-chevron-down");
+    //
+  }
+  //
+});
+$("#nutritionInfo").on("click", function () {
   //
   if ($(this).hasClass("collapsed") || $(this).hasClass("collapsing")) {
     //
