@@ -455,8 +455,8 @@ function callback(results, status) {
   //
 }
 function renderBrandedNutrition(restaurants, commonFoods) {
-  console.log("Found Branded Restaurants-----------", restaurants);
-  console.log("Found Common Foods-----", commonFoods);
+  //console.log("Found Branded Restaurants-----------", restaurants);
+  //console.log("Found Common Foods-----", commonFoods);
   var tableEl2,
     tableHeaderEl2,
     tableBodyEl2,
