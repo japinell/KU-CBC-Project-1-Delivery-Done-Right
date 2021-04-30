@@ -52,7 +52,7 @@ Below are links to access this live website and repository.
 
 Github: https://github.com/japinell/KU-CBC-Project-1-Delivery-Done-Right
 
-Deployed URL:
+Deployed URL: https://japinell.github.io/KU-CBC-Project-1-Delivery-Done-Right/
 
 ## Features
 
