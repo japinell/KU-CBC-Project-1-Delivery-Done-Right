@@ -1,42 +1,43 @@
 # Project 1: Delivery Done Right
 
-## Task
+## Project Goal
 
-The user will be able to search and filter restaurants by certain features. Features will include the restaurants near the user, delivery/no delivery/no contact delivery, nutrition & safety information. Future feature: extend the program to include grocery delivery information. The application will be using the following APIs:
+The user will be able to search and filter restaurants by certain features. Features will include the restaurants near the user, delivery/no delivery/no contact delivery for those restaurants shown via Modals, & nutrition information for products related to the keyword search.
 
-- https://api.fda.gov/food
-- https://www.nutritionix.com/business/api
-- https://maps.googleapis.com/maps/api/place/findplacefromtext/
+Future feature: extend the program to include grocery delivery information along with FDA approved nutrition labels for all products searched.
+
+The application will be using the following APIs:
+
+- https://api.openweathermap.org
+- https://api.foursquare.com
+- https://trackapi.nutritionix.com/v2/locations
+- https://maps.googleapis.com/maps/api/places
 
 ## User Story
 
 ```
 AS A local eater
-I WANT to find nearby restaurants that have delivery services along with nutrition information
+I WANT to find nearby restaurants by a keyword search that have delivery services along with nutrition information
+SO THAT I can choose a restaurant based on my preferences
 ```
 
 ## Acceptance Criteria
 
 ```
-AS A local eater
-I WANT to find nearby restaurants that have delivery services along with nutrition information
-SO THAT I can choose based on my preferences
 WHEN I open the web application
-THEN i am provided a list of Food Genre (types) as well as a search input form
-WHEN the user starts his/her input search
-THEN the user can enter text corresponding to the food that they want by zip code or mile radius
+THEN I am provided a search input form
+WHEN I start my input search
+THEN I can enter text corresponding to the food that I want by zip code and meter radius parameters
 WHEN I enter the input parameters and click the search button
 THEN I am presented with information of restaurants with my search criteria
 WHEN I click on a location listed
-THEN I can view if they have delivery, a different form of delivery(such as no-contact), or no delivery
-WHEN I click the key word of food items
+THEN I can view if they have delivery, a different form of delivery (such as no-contact), or no delivery
+WHEN I search the key word of food items
 THEN I am presented with nutritional information of that keyword
 WHEN I search a different keyword
 THEN I store the previous information into LocalStorage to access again
 ```
 
-<<<<<<< HEAD
-=======
 ## Table of Contents
 
 - [Links to Application](#Links)
@@ -104,7 +105,6 @@ The following lists the API's that are used to develop our web application:
   <br>
   Bootstrap for CSS styling: (https://getbootstrap.com/).
 
->>>>>>> develop
 ## Collaborators
 
 Group 5: `Delivery Boys`
