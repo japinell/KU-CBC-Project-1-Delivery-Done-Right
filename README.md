@@ -112,3 +112,7 @@ Group 5: `Delivery Boys`
 - `Travis Brown` @ https://github.com/bergannation
 - `Joel Stockard` @ https://github.com/jtstockard
 - `Rigo A Pinell` @ https://github.com/japinell
+
+## Copyright
+
+All licenses in this repository are copyrighted by their respective authors. Contact the authors if you want a copy of the repository.
